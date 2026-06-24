@@ -1172,27 +1172,50 @@
     <div class="workspace">
       <aside class="left">
         <section class="section">
-          <h2>Command</h2>
+          <h2>Prompt</h2>
           <div class="section-subtitle">生成したいアーキテクチャを説明してください</div>
           <textarea id="prompt" class="prompt-box" spellcheck="false"></textarea>
           <div class="hint" style="text-align:right;">166 / 2000</div>
         </section>
 
         <section class="section">
-          <h2>AI Provider</h2>
+          <h2>設計コンテキスト</h2>
+          <div class="section-subtitle">このアプリは AI API を直接呼びません。MCP / CLI / skills で導入し、Codex や Claude Code がこの JSON と図を操作します。</div>
           <div class="field-row">
-            <label>Provider
-              <select>
-                <option>OpenAI</option>
-                <option>Claude Code</option>
-                <option>Codex</option>
+            <label>クラウド
+              <select id="cloudProvider">
+                <option value="aws">AWS</option>
+                <option value="gcp">Google Cloud</option>
+                <option value="azure">Azure</option>
+                <option value="multi-cloud">Multi-cloud</option>
+                <option value="on-premise">On-premise</option>
               </select>
             </label>
-            <label>Model
-              <select>
-                <option>GPT-4o</option>
-                <option>Opus</option>
-                <option>Local Agent</option>
+            <label>データストア
+              <select id="databaseEngine">
+                <option value="postgresql">PostgreSQL</option>
+                <option value="mysql">MySQL</option>
+                <option value="cloud-sql">Cloud SQL</option>
+                <option value="dynamodb">DynamoDB</option>
+                <option value="none">未指定</option>
+              </select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label>レビュー観点
+              <select id="reviewLens">
+                <option value="well-architected">Well-Architected</option>
+                <option value="security">Security</option>
+                <option value="reliability">Reliability</option>
+                <option value="cost">Cost</option>
+                <option value="operability">Operability</option>
+              </select>
+            </label>
+            <label>実行方法
+              <select id="agentRuntime">
+                <option value="codex">Codex / CLI</option>
+                <option value="claude-code">Claude Code / MCP</option>
+                <option value="skills">Skill pack only</option>
               </select>
             </label>
           </div>
@@ -1525,6 +1548,10 @@
       imageInput: document.getElementById("imageInput"),
       imagePreview: document.getElementById("imagePreview"),
       redrawImage: document.getElementById("redrawImage"),
+      cloudProvider: document.getElementById("cloudProvider"),
+      databaseEngine: document.getElementById("databaseEngine"),
+      reviewLens: document.getElementById("reviewLens"),
+      agentRuntime: document.getElementById("agentRuntime"),
       diagramType: document.getElementById("diagramType"),
       theme: document.getElementById("theme"),
       generate: document.getElementById("generate"),
@@ -2195,6 +2222,40 @@
 
     function currentPromptInput() {
       const parts = [els.prompt.value.trim()];
+      const cloudLabels = {
+        aws: "AWS",
+        gcp: "Google Cloud",
+        azure: "Azure",
+        "multi-cloud": "multi-cloud",
+        "on-premise": "on-premise"
+      };
+      const databaseLabels = {
+        postgresql: "PostgreSQL",
+        mysql: "MySQL",
+        "cloud-sql": "Cloud SQL",
+        dynamodb: "DynamoDB",
+        none: "unspecified database"
+      };
+      const lensLabels = {
+        "well-architected": "Well-Architected",
+        security: "security",
+        reliability: "reliability",
+        cost: "cost",
+        operability: "operability"
+      };
+      const runtimeLabels = {
+        codex: "Codex / CLI",
+        "claude-code": "Claude Code / MCP",
+        skills: "skill pack only"
+      };
+      parts.push([
+        "Design context:",
+        `- Cloud provider: ${cloudLabels[els.cloudProvider.value] || els.cloudProvider.value}`,
+        `- Database: ${databaseLabels[els.databaseEngine.value] || els.databaseEngine.value}`,
+        `- Review lens: ${lensLabels[els.reviewLens.value] || els.reviewLens.value}`,
+        `- Agent operation model: ${runtimeLabels[els.agentRuntime.value] || els.agentRuntime.value}`,
+        "- The Architecture Agent app itself does not call AI provider APIs. Codex or Claude Code edits the local JSON/model."
+      ].join("\n"));
       if (els.sourceInput.value.trim()) parts.push(`Source context:\n${els.sourceInput.value.trim()}`);
       if (importedImageName) parts.push(`Imported image: ${importedImageName}. Reconstruct this as an editable diagram.`);
       return parts.filter(Boolean).join("\n\n");
@@ -2466,7 +2527,7 @@
       ]
     }, null, 2);
     renderHistory();
-    render(generateModel(els.prompt.value, { diagramType: els.diagramType.value }));
+    render(generateModel(currentPromptInput(), { diagramType: els.diagramType.value }));
   </script>
 </body>
 </html>
