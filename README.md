@@ -1,26 +1,27 @@
 # Architecture Agent
 
-Codex/Claude Codeで指示して、外部の生成AI APIを使わずにソフトウェアアーキテクチャ図を作るためのローカルツールです。
+Codex / Claude Code に指示して、外部の生成 AI API を使わずにソフトウェアアーキテクチャ図を作るためのローカルツールです。
 
-Architecture Agentは、ブラウザ上の図編集ツールと、Codexが参照するアーキテクチャ・スキルパックで構成されています。Codexが `codex-diagram.json` を編集し、ブラウザは描画・手動編集・エクスポートを担当します。
+Architecture Agent は、ブラウザ上で使う図編集ツールと、Codex / Claude Code が参照するアーキテクチャ用 skill pack で構成されています。エージェントが `outputs/codex-diagram.json` を編集し、ブラウザは描画、手動編集、エクスポートを担当します。
 
-## Features
+## 特徴
 
-- Prompt-to-diagram style workflow without app-side AI API calls
-- Codex-controlled JSON architecture model
-- Local browser editor: drag nodes, edit labels, render DSL, export SVG/PNG/JSON/Markdown
-- Architecture metadata: quality goals, decisions, risks, review findings, sources
-- Skill pack references for:
-  - common architecture foundations: C4, arc42, ISO/IEC/IEEE 42010-style concerns
-  - AWS Well-Architected review lens
-  - Google Cloud Well-Architected review lens
-  - PostgreSQL architecture concerns
-  - MySQL architecture concerns
-- Validation script for diagram structure and architecture quality warnings
+- アプリ側で生成 AI API を呼ばない prompt-to-diagram 形式のワークフロー
+- Codex / Claude Code が編集しやすい JSON ベースのアーキテクチャモデル
+- ローカルブラウザで動く図編集ツール
+- ノードのドラッグ、ラベル編集、DSL 描画、SVG / PNG / JSON / Markdown エクスポート
+- 品質目標、意思決定、リスク、レビュー結果、参照元を含むアーキテクチャメタデータ
+- 次の観点を含む skill pack
+  - C4、arc42、ISO/IEC/IEEE 42010 風の共通アーキテクチャ観点
+  - AWS Well-Architected のレビュー観点
+  - Google Cloud Well-Architected のレビュー観点
+  - PostgreSQL の設計観点
+  - MySQL の設計観点
+- 図の構造とアーキテクチャ品質を確認する検証スクリプト
 
-## Quick Start
+## クイックスタート
 
-### Option A: Clone
+### A. リポジトリを clone して使う
 
 ```bash
 git clone https://github.com/kochan17/architecture-agent.git
@@ -29,9 +30,7 @@ npm run check
 open outputs/architecture-studio.html
 ```
 
-### Option B: Install CLI from GitHub
-
-After this repository is public, your friends can install directly from GitHub:
+### B. GitHub から CLI をインストールする
 
 ```bash
 npm install -g github:kochan17/architecture-agent
@@ -39,7 +38,7 @@ architecture-agent init my-architecture
 architecture-agent open my-architecture
 ```
 
-Or run without global install:
+グローバルインストールせずに実行する場合:
 
 ```bash
 npx github:kochan17/architecture-agent init my-architecture
@@ -47,21 +46,21 @@ cd my-architecture
 node skills/architecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json
 ```
 
-### Option C: Install only the agent skill
+### C. skill pack だけをインストールする
 
-If you only want the Codex/Claude Code skill pack and do not need the browser studio or CLI:
+ブラウザ編集ツールや CLI は使わず、Codex / Claude Code 用の skill pack だけを入れたい場合:
 
 ```bash
 npx skills add kochan17/architecture-agent/skills
 ```
 
-For a local checkout:
+ローカル checkout から追加する場合:
 
 ```bash
 npx skills add ./skills
 ```
 
-After installing the skill, ask your agent to use `architecture-agent` when creating or reviewing architecture diagrams.
+インストール後は、アーキテクチャ図の作成やレビューを依頼するときに `architecture-agent` skill を使うようエージェントに指示してください。
 
 ## CLI
 
@@ -69,73 +68,73 @@ After installing the skill, ask your agent to use `architecture-agent` when crea
 architecture-agent init [directory]
 ```
 
-Copies the browser studio, sample architecture JSON, and skill pack into a working directory.
+ブラウザ編集ツール、サンプル JSON、skill pack を指定ディレクトリへコピーします。
 
 ```bash
 architecture-agent open [directory]
 ```
 
-Opens `outputs/architecture-studio.html`.
+`outputs/architecture-studio.html` を既定のブラウザで開きます。
 
 ```bash
 architecture-agent validate [json-file]
 ```
 
-Validates `outputs/codex-diagram.json` or another compatible JSON file.
+`outputs/codex-diagram.json` または互換 JSON ファイルを検証します。
 
 ```bash
 architecture-agent where
 ```
 
-Prints the installed package path.
+インストール済みパッケージの場所を表示します。
 
-## Codex / Claude Code Workflow
+## Codex / Claude Code での使い方
 
-1. Open this project in Codex or Claude Code.
-2. Tell the agent what architecture you want.
-   - Example: `GCP + Cloud Run + Cloud SQL のB2B SaaS構成を、セキュリティと運用重視で作って`
-   - Example: `AWS + PostgreSQL + SQS のSaaS構成を、Well-Architected観点でレビュー付きにして`
-   - Example: `MySQLを使う構成に変えて、バックアップ、レプリケーション、権限設計も入れて`
-3. The agent should read `skills/architecture-agent/SKILL.md`.
-4. The agent updates `outputs/codex-diagram.json`.
-5. Run validation:
+1. このプロジェクトを Codex または Claude Code で開きます。
+2. 作りたいアーキテクチャをエージェントに伝えます。
+   - 例: `GCP + Cloud Run + Cloud SQL のB2B SaaS構成を、セキュリティと運用重視で作って`
+   - 例: `AWS + PostgreSQL + SQS のSaaS構成を、Well-Architected観点でレビュー付きにして`
+   - 例: `MySQLを使う構成に変えて、バックアップ、レプリケーション、権限設計も入れて`
+3. エージェントに `skills/architecture-agent/SKILL.md` を読ませます。
+4. エージェントが `outputs/codex-diagram.json` を更新します。
+5. 検証を実行します。
 
 ```bash
 npm run validate
 ```
 
-6. Open `outputs/architecture-studio.html`.
-7. Paste the JSON into `Codex JSON` and click `Load JSON`.
-8. Export SVG, PNG, JSON, or Markdown.
+6. `outputs/architecture-studio.html` を開きます。
+7. `codex-diagram.json` の内容を `Codex JSON` に貼り付け、`Load JSON` を押します。
+8. 必要に応じて SVG、PNG、JSON、Markdown として書き出します。
 
-## Architecture Skill Pack
+## Skill Pack
 
-The skill pack lives in:
+skill pack は次の場所にあります。
 
 ```text
 skills/architecture-agent/
 ```
 
-Important files:
+主なファイル:
 
-- `SKILL.md`: workflow and output rules
-- `references/common-architecture.md`: C4 / arc42 / ISO 42010-style baseline
-- `references/aws.md`: AWS Well-Architected review lens
-- `references/gcp.md`: Google Cloud Well-Architected review lens
-- `references/postgresql.md`: PostgreSQL design concerns
-- `references/mysql.md`: MySQL design concerns
-- `references/quality-gate.md`: final review checklist
-- `scripts/validate_architecture_json.mjs`: validation script
+- `SKILL.md`: ワークフローと出力ルール
+- `references/common-architecture.md`: C4 / arc42 / ISO 42010 風の基本観点
+- `references/aws.md`: AWS Well-Architected のレビュー観点
+- `references/gcp.md`: Google Cloud Well-Architected のレビュー観点
+- `references/postgresql.md`: PostgreSQL の設計観点
+- `references/mysql.md`: MySQL の設計観点
+- `references/quality-gate.md`: 最終レビュー用チェックリスト
+- `scripts/validate_architecture_json.mjs`: 検証スクリプト
 
-## JSON Model
+## JSON モデル
 
-The main editable architecture file is:
+メインの編集対象ファイルは次の JSON です。
 
 ```text
 outputs/codex-diagram.json
 ```
 
-Minimum shape:
+最小構成:
 
 ```json
 {
@@ -156,7 +155,7 @@ Minimum shape:
 }
 ```
 
-Supported node types:
+対応しているノード種別:
 
 - `user`
 - `edge`
@@ -170,27 +169,29 @@ Supported node types:
 - `analytics`
 - `observability`
 
-## Validation
+## 検証
 
 ```bash
 npm run check
 ```
 
-Checks:
+確認する内容:
 
-- HTML script syntax
-- JSON parseability
-- duplicate node IDs
-- missing edge references
-- missing architecture metadata
-- database without visible backup/restore/HA posture
-- queue without retry/DLQ/idempotency posture
-- public edge without visible security control posture
+- HTML 内 JavaScript の構文
+- JSON として読み込めるか
+- ノード ID の重複
+- 存在しないノードを参照している edge
+- アーキテクチャメタデータの不足
+- backup / restore / HA の姿勢が見えない database
+- retry / DLQ / idempotency の姿勢が見えない queue
+- security control の姿勢が見えない public edge
 
-## What This Is Not
+## このツールがしないこと
 
-This is not a hosted SaaS and does not call OpenAI, Anthropic, Google, AWS, or any other generation API from the web app. The architecture reasoning happens in your coding agent session, using local files and references.
+Architecture Agent は hosted SaaS ではありません。Web アプリから OpenAI、Anthropic、Google、AWS などの生成 AI API を呼びません。
 
-## License
+アーキテクチャの検討は、ローカルファイルと参照資料を使って、Codex / Claude Code のセッション内で行います。
+
+## ライセンス
 
 MIT
