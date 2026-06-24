@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -491,10 +491,649 @@
         min-height: 420px;
       }
     }
+
+    /* Image-2 inspired studio redesign */
+    :root {
+      --bg: #f7f7f4;
+      --panel: #ffffff;
+      --panel-strong: #ffffff;
+      --ink: #17191c;
+      --muted: #697077;
+      --soft: #8a9199;
+      --line: #e4e6e8;
+      --line-strong: #d4d8dc;
+      --accent: #007f78;
+      --accent-strong: #00645f;
+      --accent-soft: #e8f6f3;
+      --blue: #2d6cdf;
+      --blue-soft: #eef5ff;
+      --amber: #b87905;
+      --amber-soft: #fff6dd;
+      --danger: #c13a32;
+      --danger-soft: #fff0ef;
+      --success: #17845b;
+      --success-soft: #ecf8f1;
+      --shadow: 0 10px 28px rgba(21, 27, 36, 0.08);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 54px 312px minmax(620px, 1fr) 360px;
+      grid-template-rows: 56px minmax(0, 1fr);
+      background: var(--bg);
+    }
+
+    .side-rail {
+      grid-row: 1 / -1;
+      grid-column: 1;
+      display: grid;
+      grid-template-rows: 56px 1fr auto;
+      align-items: start;
+      justify-items: center;
+      background: #ffffff;
+      border-right: 1px solid var(--line);
+      z-index: 10;
+    }
+
+    .rail-mark {
+      width: 54px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid var(--line);
+      color: #111315;
+    }
+
+    .rail-stack {
+      display: grid;
+      gap: 12px;
+      padding-top: 14px;
+    }
+
+    .rail-bottom {
+      display: grid;
+      gap: 12px;
+      padding-bottom: 14px;
+    }
+
+    .rail-button,
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #5d656d;
+    }
+
+    .rail-button.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .avatar {
+      border-radius: 50%;
+      background: #eef0f2;
+      color: #4c535a;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    header {
+      grid-column: 2 / -1;
+      height: 56px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      gap: 10px;
+      min-width: 260px;
+    }
+
+    .mark {
+      display: none;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 720;
+    }
+
+    .brand-subtitle {
+      display: inline-flex;
+      margin-left: 8px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: #eef0f2;
+      color: #687079;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #4a5057;
+      font-size: 13px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .breadcrumbs strong {
+      color: #151719;
+      font-weight: 650;
+    }
+
+    .crumb-sep {
+      color: #b3b8be;
+    }
+
+    .top-actions {
+      gap: 9px;
+      flex: 0 0 auto;
+    }
+
+    button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: #2b3035;
+      border-radius: 7px;
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 560;
+      box-shadow: none;
+    }
+
+    button:hover {
+      border-color: #c6cbd0;
+      background: #fafafa;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 8px 18px rgba(0, 127, 120, 0.18);
+    }
+
+    button.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .left,
+    .right {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .left {
+      grid-column: 2;
+    }
+
+    .canvas-shell {
+      grid-column: 3;
+      background:
+        radial-gradient(circle, rgba(47, 54, 62, 0.13) 1px, transparent 1px),
+        #fbfbf8;
+      background-size: 18px 18px;
+      grid-template-rows: 48px minmax(0, 1fr) 42px;
+    }
+
+    .right {
+      grid-column: 4;
+      border-left: 1px solid var(--line);
+    }
+
+    .section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      color: #202429;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin: -4px 0 10px;
+    }
+
+    .prompt-box {
+      min-height: 154px;
+    }
+
+    .prompt-box,
+    .follow-up,
+    .dsl-editor,
+    select,
+    input[type="text"],
+    input[type="file"] {
+      border-color: var(--line);
+      background: #ffffff;
+      border-radius: 7px;
+      color: var(--ink);
+    }
+
+    textarea,
+    select,
+    input {
+      font-size: 13px;
+    }
+
+    label {
+      color: #3b4148;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    label span,
+    .hint {
+      color: var(--muted);
+      font-weight: 450;
+    }
+
+    .hint {
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 9px;
+    }
+
+    .field-row {
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .preset-grid {
+      gap: 8px;
+    }
+
+    .preset {
+      border-radius: 999px;
+      min-height: 30px;
+      padding: 0 12px;
+      font-size: 12px;
+      color: #4f5862;
+      background: #ffffff;
+    }
+
+    .preset:first-child {
+      background: var(--accent-soft);
+      border-color: #9bd7ce;
+      color: var(--accent-strong);
+    }
+
+    .canvas-toolbar,
+    .statusbar {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: var(--line);
+      backdrop-filter: blur(16px);
+      padding: 0 14px;
+    }
+
+    .toolbar-row {
+      gap: 8px;
+    }
+
+    .segmented {
+      background: #f4f5f6;
+      border-color: var(--line);
+      border-radius: 7px;
+      padding: 2px;
+    }
+
+    .segmented button {
+      min-height: 28px;
+      border-radius: 5px;
+      color: #5b626a;
+    }
+
+    .segmented button.active {
+      background: #ffffff;
+      color: var(--accent);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+    }
+
+    .zoom {
+      width: 118px;
+      accent-color: var(--accent);
+    }
+
+    .stage {
+      position: relative;
+      padding: 24px;
+      place-items: center;
+    }
+
+    .diagram-card {
+      width: min(1040px, calc(100% - 36px));
+      min-height: 610px;
+      aspect-ratio: 16 / 10.5;
+      background: #ffffff;
+      border: 1px solid #e0e3e7;
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(18, 24, 32, 0.08);
+    }
+
+    .floating-tools {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      padding: 7px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      box-shadow: 0 8px 26px rgba(20, 26, 34, 0.12);
+      z-index: 3;
+    }
+
+    .floating-tools .icon-button {
+      width: 30px;
+      min-height: 30px;
+      padding: 0;
+    }
+
+    .mini-map {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      width: 162px;
+      height: 106px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 8px 24px rgba(20, 26, 34, 0.10);
+      padding: 8px;
+      z-index: 2;
+    }
+
+    .mini-map svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .legend-card {
+      position: absolute;
+      top: 18px;
+      left: 26px;
+      display: grid;
+      gap: 7px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(20, 26, 34, 0.08);
+      font-size: 12px;
+      color: #4d555e;
+      z-index: 2;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid currentColor;
+    }
+
+    .statusbar {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .right-tabs {
+      display: flex;
+      gap: 18px;
+      padding: 0 16px;
+      height: 44px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .right-tab {
+      position: relative;
+      height: 32px;
+      color: #5e6670;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .right-tab.active {
+      color: var(--accent);
+    }
+
+    .right-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 99px;
+    }
+
+    .right-tab .badge {
+      margin-left: 4px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #eef0f2;
+      color: #6c747c;
+      font-size: 11px;
+    }
+
+    .review-card,
+    .panel-card,
+    .stat {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 0 rgba(18, 24, 32, 0.02);
+    }
+
+    .review-card {
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .review-row,
+    .service-row,
+    .decision-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px solid #f0f1f2;
+      font-size: 13px;
+    }
+
+    .review-row:first-child,
+    .service-row:first-child,
+    .decision-row:first-child {
+      border-top: 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .pill.good,
+    .pill.healthy {
+      color: var(--success);
+      background: var(--success-soft);
+      border: 1px solid #bde8d0;
+    }
+
+    .pill.warning {
+      color: var(--amber);
+      background: var(--amber-soft);
+      border: 1px solid #f1d58e;
+    }
+
+    .pill.info {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border: 1px solid #c7ddff;
+    }
+
+    .pill.danger {
+      color: var(--danger);
+      background: var(--danger-soft);
+      border: 1px solid #f0c1bd;
+    }
+
+    .stats {
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 9px;
+    }
+
+    .stat strong {
+      font-size: 18px;
+      color: #151719;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .dsl-editor {
+      min-height: 196px;
+      font-size: 11px;
+      background: #fbfbfa;
+    }
+
+    .history button {
+      border-radius: 8px;
+      border-color: var(--line);
+      background: #fbfbfa;
+    }
+
+    .node-selected rect {
+      stroke: var(--accent) !important;
+      stroke-width: 2.5;
+    }
+
+    .toast {
+      background: #151719;
+      border-radius: 8px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 54px 300px minmax(520px, 1fr);
+      }
+
+      .right {
+        display: none;
+      }
+
+      header {
+        grid-column: 2 / -1;
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        display: block;
+        height: auto;
+      }
+
+      .side-rail {
+        display: none;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        min-height: 56px;
+      }
+
+      .breadcrumbs,
+      .top-actions {
+        display: none;
+      }
+
+      .canvas-shell {
+        min-height: 680px;
+      }
+
+      .mini-map,
+      .legend-card {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="app">
+    <nav class="side-rail" aria-label="主要ナビゲーション">
+      <div class="rail-mark">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4z"></path><path d="m4 12 8 4 8-4"></path><path d="m4 17 8 4 8-4"></path></svg>
+      </div>
+      <div class="rail-stack">
+        <div class="rail-button active" title="コメント"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg></div>
+        <div class="rail-button" title="レイヤー"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5-9 5-9-5z"></path><path d="m3 12 9 5 9-5"></path><path d="m3 17 9 5 9-5"></path></svg></div>
+        <div class="rail-button" title="データ"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="7" ry="3"></ellipse><path d="M5 5v14c0 1.7 14 1.7 14 0V5"></path><path d="M5 12c0 1.7 14 1.7 14 0"></path></svg></div>
+        <div class="rail-button" title="ドキュメント"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path></svg></div>
+        <div class="rail-button" title="連携"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="m8.6 16.5 6.8-9"></path><path d="M9 18h6"></path></svg></div>
+        <div class="rail-button" title="設定"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1-2 3.4-.2-.1a1.8 1.8 0 0 0-2 .4l-.2.2-3.5-2-.1-.3a1.8 1.8 0 0 0-1.8 0l-.1.3-3.5 2-.2-.2a1.8 1.8 0 0 0-2-.4l-.2.1-2-3.4.1-.1a1.8 1.8 0 0 0 .4-2L2.5 15v-4l.3-.1a1.8 1.8 0 0 0 .9-1.6L3.6 9l2-3.4.2.1a1.8 1.8 0 0 0 2-.4l.2-.2 3.5 2 .1.3a1.8 1.8 0 0 0 1.8 0l.1-.3 3.5-2 .2.2a1.8 1.8 0 0 0 2 .4l.2-.1 2 3.4-.1.3a1.8 1.8 0 0 0 .9 1.6l.3.1v4z"></path></svg></div>
+      </div>
+      <div class="rail-bottom">
+        <div class="rail-button" title="ヘルプ"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.5 9a2.7 2.7 0 0 1 5.1 1.2c0 1.8-2.6 2.1-2.6 4"></path><path d="M12 18h.01"></path></svg></div>
+        <div class="avatar">JD</div>
+      </div>
+    </nav>
     <header>
       <div class="brand" aria-label="Architecture Agent">
         <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
@@ -502,22 +1141,30 @@
           <path d="M9 11.5 16 8l7 3.5M9 20.5 16 24l7-3.5M16 8v16" fill="none" stroke="currentColor" stroke-width="2" />
         </svg>
         <div>
-          <div class="brand-title">Architecture Agent</div>
-          <div class="brand-subtitle">Prompt-to-diagram workspace</div>
+          <span class="brand-title">Architecture Agent</span>
+          <span class="brand-subtitle">Beta</span>
         </div>
       </div>
+      <div class="breadcrumbs" aria-label="現在の場所">
+        <span>Projects</span>
+        <span class="crumb-sep">/</span>
+        <strong>E-Commerce Platform</strong>
+        <span class="crumb-sep">/</span>
+        <strong>Current Architecture</strong>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
       <div class="top-actions">
-        <button id="copyDslTop" title="Copy diagram code">
+        <button id="copyDslTop" title="図コードをコピー">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
-          Copy DSL
+          DSLコピー
         </button>
-        <button id="downloadSvgTop" title="Download SVG">
+        <button id="downloadSvgTop" title="SVGを書き出し">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
-          SVG
+          エクスポート
         </button>
-        <button id="downloadPngTop" class="primary" title="Download PNG">
+        <button id="downloadPngTop" class="primary" title="PNGを書き出し">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
-          PNG
+          保存
         </button>
       </div>
     </header>
@@ -525,97 +1172,120 @@
     <div class="workspace">
       <aside class="left">
         <section class="section">
-          <h2>Prompt</h2>
+          <h2>Command</h2>
+          <div class="section-subtitle">生成したいアーキテクチャを説明してください</div>
           <textarea id="prompt" class="prompt-box" spellcheck="false"></textarea>
-          <div class="hint">Describe components, data flow, boundaries, and cloud provider. The generator extracts structure into editable diagram code.</div>
+          <div class="hint" style="text-align:right;">166 / 2000</div>
         </section>
 
         <section class="section">
-          <h2>Presets</h2>
+          <h2>AI Provider</h2>
+          <div class="field-row">
+            <label>Provider
+              <select>
+                <option>OpenAI</option>
+                <option>Claude Code</option>
+                <option>Codex</option>
+              </select>
+            </label>
+            <label>Model
+              <select>
+                <option>GPT-4o</option>
+                <option>Opus</option>
+                <option>Local Agent</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Architecture Presets</h2>
           <div class="preset-grid">
-            <button class="preset" data-preset="saas">SaaS app</button>
-            <button class="preset" data-preset="serverless">Serverless API</button>
-            <button class="preset" data-preset="data">Data pipeline</button>
+            <button class="preset" data-preset="saas">C4 - Container</button>
+            <button class="preset" data-preset="serverless">Serverless</button>
+            <button class="preset" data-preset="data">Data Flow</button>
             <button class="preset" data-preset="k8s">Kubernetes</button>
+            <button class="preset" data-preset="saas">AWS Well-Architected</button>
+            <button class="preset" data-preset="serverless">Microservices</button>
           </div>
         </section>
 
         <section class="section">
           <h2>Options</h2>
           <div class="field-row">
-            <label>Diagram type
+            <label>図の種類
               <select id="diagramType">
-                <option value="architecture">Architecture</option>
-                <option value="flow">Flow</option>
-                <option value="data">Data flow</option>
-                <option value="sequence">Sequence</option>
+                <option value="architecture">アーキテクチャ</option>
+                <option value="flow">フロー</option>
+                <option value="data">データフロー</option>
+                <option value="sequence">シーケンス</option>
                 <option value="erd">ERD</option>
                 <option value="bpmn">BPMN</option>
-                <option value="network">Network</option>
+                <option value="network">ネットワーク</option>
                 <option value="kubernetes">Kubernetes</option>
               </select>
             </label>
-            <label>Theme
+            <label>スタイル
               <select id="theme">
-                <option value="technical">Technical</option>
+                <option value="technical">System</option>
                 <option value="executive">Executive</option>
-                <option value="incident">Incident review</option>
+                <option value="incident">Incident Review</option>
               </select>
             </label>
           </div>
           <button id="generate" class="primary" style="width: 100%;">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.2 5.2L19 10.4l-4.8 2.2L12 18l-2.2-5.4L5 10.4l4.8-2.2z"></path><path d="m19 16 .8 1.8 1.7.7-1.7.8L19 21l-.8-1.7-1.7-.8 1.7-.7z"></path></svg>
-            Generate diagram
+            生成
           </button>
         </section>
 
         <section class="section">
-          <h2>Inputs</h2>
-          <label>Source code, Terraform, SQL, or YAML
-            <textarea id="sourceInput" class="follow-up" placeholder="Paste code or config to bias generation"></textarea>
+          <h2>追加コンテキスト</h2>
+          <label>コード、Terraform、SQL、YAML
+            <textarea id="sourceInput" class="follow-up" placeholder="生成の前提にしたいコードや設定を貼り付け"></textarea>
           </label>
           <label style="margin-top: 10px;">Codex JSON
-            <textarea id="codexJson" class="follow-up" placeholder="Paste outputs/codex-diagram.json here"></textarea>
+            <textarea id="codexJson" class="follow-up" placeholder="outputs/codex-diagram.json を貼り付け"></textarea>
           </label>
           <div class="toolbar-row" style="margin-top: 8px;">
             <button id="loadCodexJson">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
-              Load JSON
+              JSON読込
             </button>
             <button id="copyCurrentJson">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
-              Copy current
+              現在をコピー
             </button>
           </div>
-          <label style="margin-top: 10px;">Image import
+          <label style="margin-top: 10px;">画像インポート
             <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" />
           </label>
           <img id="imagePreview" class="image-preview" alt="Imported diagram preview" />
           <div class="toolbar-row" style="margin-top: 8px;">
             <button id="redrawImage">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h4l2-3h4l2 3h4v13H4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
-              Re-draw
+              再構成
             </button>
           </div>
         </section>
 
         <section class="section">
-          <h2>Follow-up edit</h2>
-          <textarea id="followUp" class="follow-up" placeholder="Example: add Redis cache between API and database"></textarea>
+          <h2>追加編集</h2>
+          <textarea id="followUp" class="follow-up" placeholder="例: API と DB の間に Redis キャッシュを追加"></textarea>
           <div class="toolbar-row" style="margin-top: 8px;">
             <button id="applyEdit">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>
-              Apply
+              適用
             </button>
             <button id="reset">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path></svg>
-              Reset
+              リセット
             </button>
           </div>
         </section>
 
         <section class="section">
-          <h2>History</h2>
+          <h2>履歴</h2>
           <div id="history" class="history"></div>
         </section>
       </aside>
@@ -624,42 +1294,78 @@
         <div class="canvas-toolbar">
           <div class="toolbar-row">
             <div class="segmented" aria-label="Canvas view">
-              <button id="viewDiagram" class="active">Diagram</button>
-              <button id="viewCode">Code</button>
+              <button id="viewDiagram" class="active">図</button>
+              <button id="viewCode">コード</button>
             </div>
             <button id="fit">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
-              Fit
+              全体表示
             </button>
           </div>
           <div class="toolbar-row">
-            <label style="display:flex; align-items:center; gap:8px;">Zoom
+            <button class="icon-button" title="元に戻す"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h11a5 5 0 0 1 0 10h-1"></path></svg></button>
+            <button class="icon-button" title="やり直し"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"></path><path d="M20 9H9a5 5 0 0 0 0 10h1"></path></svg></button>
+            <label style="display:flex; align-items:center; gap:8px;">ズーム
               <input id="zoom" class="zoom" type="range" min="70" max="140" value="100" />
             </label>
           </div>
         </div>
 
         <div id="stage" class="stage">
+          <div class="legend-card" aria-label="凡例">
+            <div class="legend-item"><span class="legend-swatch" style="color:#1f9a81;background:#eefaf5;"></span>クライアント</div>
+            <div class="legend-item"><span class="legend-swatch" style="color:#2d6cdf;background:#eef5ff;"></span>サービス</div>
+            <div class="legend-item"><span class="legend-swatch" style="color:#b87905;background:#fff6dd;"></span>データストア</div>
+            <div class="legend-item"><span class="legend-swatch" style="color:#7461d5;background:#f3f0ff;"></span>外部</div>
+            <div class="legend-item"><span class="legend-swatch" style="color:#8d949c;background:#fff;border-style:dashed;"></span>境界</div>
+          </div>
+          <div class="mini-map" aria-hidden="true">
+            <svg viewBox="0 0 150 92">
+              <rect x="6" y="8" width="105" height="55" rx="3" fill="#eef8f7" stroke="#00867d" stroke-width="1.4"></rect>
+              <rect x="20" y="24" width="22" height="13" fill="#eef5ff" stroke="#8eb8f1"></rect>
+              <rect x="54" y="24" width="22" height="13" fill="#eef5ff" stroke="#8eb8f1"></rect>
+              <rect x="88" y="24" width="22" height="13" fill="#eef5ff" stroke="#8eb8f1"></rect>
+              <rect x="30" y="51" width="18" height="13" rx="6" fill="#fff6dd" stroke="#d09a25"></rect>
+              <rect x="66" y="51" width="18" height="13" rx="6" fill="#fff6dd" stroke="#d09a25"></rect>
+              <rect x="104" y="51" width="18" height="13" rx="6" fill="#fff6dd" stroke="#d09a25"></rect>
+              <rect x="116" y="29" width="24" height="12" fill="#f3f0ff" stroke="#b8aaf0"></rect>
+              <rect x="6" y="8" width="105" height="55" fill="none" stroke="#00867d" stroke-width="2"></rect>
+            </svg>
+          </div>
           <div id="diagramCard" class="diagram-card">
-            <svg id="diagramSvg" viewBox="0 0 1200 750" role="img" aria-label="Generated architecture diagram"></svg>
+            <svg id="diagramSvg" viewBox="0 0 1200 750" role="img" aria-label="生成されたアーキテクチャ図"></svg>
           </div>
           <textarea id="codePanel" class="dsl-editor" spellcheck="false" style="display:none;"></textarea>
+          <div class="floating-tools" aria-label="キャンバス操作">
+            <button class="icon-button" title="元に戻す"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h11a5 5 0 0 1 0 10h-1"></path></svg></button>
+            <button class="icon-button" title="やり直し"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"></path><path d="M20 9H9a5 5 0 0 0 0 10h1"></path></svg></button>
+            <button class="icon-button" title="整列"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M7 12h10"></path><path d="M10 17h4"></path></svg></button>
+            <button class="icon-button" title="レイヤー"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4z"></path><path d="m4 12 8 4 8-4"></path></svg></button>
+            <button class="icon-button" title="フルスクリーン"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg></button>
+            <button class="icon-button" title="削除"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg></button>
+          </div>
         </div>
 
         <div class="statusbar">
-          <span id="status">Ready</span>
-          <span id="summary">0 nodes, 0 edges</span>
+          <span id="status">準備完了</span>
+          <span id="summary">0 ノード、0 接続</span>
         </div>
       </main>
 
       <aside class="right">
+        <div class="right-tabs" aria-label="レビュータブ">
+          <div class="right-tab active">レビュー</div>
+          <div class="right-tab">意思決定</div>
+          <div class="right-tab">リスク</div>
+          <div class="right-tab">ソース <span class="badge">3</span></div>
+        </div>
         <section class="section">
-          <h2>Inspector</h2>
+          <h2>ノード編集</h2>
           <div class="mini-grid">
-            <label>Label
-              <input id="nodeLabel" type="text" placeholder="Select a node" />
+            <label>ラベル
+              <input id="nodeLabel" type="text" placeholder="ノードを選択" />
             </label>
-            <label>Type
+            <label>種類
               <select id="nodeType">
                 <option value="user">user</option>
                 <option value="edge">edge</option>
@@ -684,51 +1390,97 @@
           <div class="toolbar-row" style="margin-top: 8px; flex-wrap: wrap;">
             <button id="updateNode">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
-              Update
+              更新
             </button>
             <button id="duplicateNode">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16V6a2 2 0 0 1 2-2h10"></path></svg>
-              Duplicate
+              複製
             </button>
             <button id="deleteNode">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
-              Delete
+              削除
             </button>
           </div>
-          <div class="hint">Click or drag nodes on the canvas. The code panel stays editable for precise changes.</div>
+          <div class="hint">キャンバス上のノードをクリックまたはドラッグできます。</div>
         </section>
 
         <section class="section">
-          <h2>Diagram code</h2>
+          <h2>Architecture Status</h2>
+          <div class="review-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <span class="pill good">Good</span>
+              <span class="hint" style="margin:0;">2時間前にレビュー済み</span>
+            </div>
+            <div>
+              <strong style="font-size:13px;">Summary</strong>
+              <div class="hint">サービス境界とデータ所有権が明確な、モジュラーモノリス寄りの構成です。</div>
+            </div>
+            <div>
+              <strong style="font-size:13px;">Issues</strong>
+              <div class="review-row"><span><span class="pill warning">2</span> Medium</span><span>›</span></div>
+              <div class="review-row"><span><span class="pill danger">1</span> High</span><span>›</span></div>
+              <div class="review-row"><span><span class="pill info">3</span> Info</span><span>›</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>サービス概要</h2>
+          <div class="panel-card" style="padding: 4px 12px;">
+            <div class="service-row"><span>API Gateway</span><span class="pill healthy">Healthy</span></div>
+            <div class="service-row"><span>Auth Service</span><span class="pill healthy">Healthy</span></div>
+            <div class="service-row"><span>Product Catalog</span><span class="pill healthy">Healthy</span></div>
+            <div class="service-row"><span>Order Service</span><span class="pill warning">Warning</span></div>
+            <div class="service-row"><span>Payment Gateway</span><span class="pill warning">Warning</span></div>
+            <div class="service-row"><span>Shipping Service</span><span class="pill info">Info</span></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>図コード</h2>
           <textarea id="dsl" class="dsl-editor" spellcheck="false"></textarea>
           <div class="toolbar-row" style="margin-top: 8px;">
             <button id="renderDsl">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 3 14 9-14 9z"></path></svg>
-              Render
+              描画
             </button>
             <button id="copyDsl">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
-              Copy
+              コピー
             </button>
           </div>
         </section>
 
         <section class="section">
-          <h2>Model</h2>
+          <h2>モデル</h2>
           <div class="stats">
-            <div class="stat"><strong id="nodeCount">0</strong><span>nodes</span></div>
-            <div class="stat"><strong id="edgeCount">0</strong><span>edges</span></div>
-            <div class="stat"><strong id="groupCount">0</strong><span>groups</span></div>
+            <div class="stat"><strong id="nodeCount">0</strong><span>ノード</span></div>
+            <div class="stat"><strong id="edgeCount">0</strong><span>接続</span></div>
+            <div class="stat"><strong id="groupCount">0</strong><span>境界</span></div>
           </div>
         </section>
 
         <section class="section">
-          <h2>Architecture review</h2>
-          <div id="architectureReview" class="hint">Load Codex JSON with meta fields to show quality goals, decisions, risks, and findings.</div>
+          <h2>レビュー詳細</h2>
+          <div id="architectureReview" class="hint">meta フィールド付きの Codex JSON を読み込むと、品質目標、意思決定、リスク、所見を表示します。</div>
         </section>
 
         <section class="section">
-          <h2>Export</h2>
+          <h2>最近の意思決定</h2>
+          <div class="panel-card" style="padding: 4px 12px;">
+            <div class="decision-row">
+              <span>Order と Inventory を分離</span>
+              <span class="pill good">承認</span>
+            </div>
+            <div class="decision-row">
+              <span>Redis を read path に追加</span>
+              <span class="pill info">候補</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>エクスポート</h2>
           <div class="toolbar-row" style="flex-wrap: wrap;">
             <button id="downloadSvg">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
@@ -747,7 +1499,7 @@
               MD
             </button>
           </div>
-          <div class="hint">Exports are generated locally in your browser. No prompt or diagram data leaves this page.</div>
+          <div class="hint">書き出しはブラウザ内で完結します。プロンプトや図データは外部に送信しません。</div>
         </section>
       </aside>
     </div>
@@ -757,10 +1509,10 @@
 
   <script>
     const presets = {
-      saas: "Create a production SaaS architecture on AWS. Users enter through CloudFront and WAF, then an application load balancer routes traffic to a React web app and Node API services in a private VPC. The API uses PostgreSQL, Redis cache, S3 object storage, a queue for background jobs, observability, and an admin console.",
-      serverless: "Design a serverless API platform. Mobile and web clients call API Gateway. Lambda functions handle auth, billing, notifications, and reporting. DynamoDB stores operational data, S3 stores files, EventBridge coordinates events, and CloudWatch monitors errors.",
-      data: "Generate a data pipeline architecture. Product databases and event streams flow into Kafka, then Spark jobs transform data into a warehouse. BI dashboards query curated marts, ML jobs train models, and alerts track freshness and quality.",
-      k8s: "Draw a Kubernetes microservices platform. Public traffic reaches an ingress controller, then frontend, identity, catalog, checkout, and worker services. Services use Postgres, Redis, object storage, message queue, service mesh, and observability."
+      saas: "ECプラットフォームの高レベルなアーキテクチャを作成。Web / mobile clients, API gateway, auth service, product catalog, order service, payment service, inventory, notifications, data stores, Redis cache を含める。",
+      serverless: "サーバーレス API プラットフォームを設計。Mobile / web clients, API Gateway, Lambda functions, auth, billing, notifications, reporting, DynamoDB, S3, EventBridge, CloudWatch を含める。",
+      data: "データパイプラインのアーキテクチャを作成。Product databases, event streams, Kafka, Spark, warehouse, BI dashboards, ML jobs, freshness alerts を含める。",
+      k8s: "Kubernetes マイクロサービス基盤を描く。Ingress, frontend, identity, catalog, checkout, worker services, Postgres, Redis, object storage, message queue, service mesh, observability を含める。"
     };
 
     const els = {
@@ -818,17 +1570,17 @@
     let importedImageName = "";
 
     const typeColors = {
-      user: ["#f7efe1", "#9b6a22"],
-      edge: ["#e8f2f4", "#176b87"],
-      gateway: ["#e8f2f4", "#176b87"],
-      app: ["#f2f5ea", "#517037"],
-      service: ["#eef0f7", "#4e5c8f"],
-      database: ["#f8ecec", "#9b3030"],
-      cache: ["#fff0db", "#a25f12"],
-      queue: ["#f2eaf6", "#7b4c91"],
-      storage: ["#eaf5f0", "#31785f"],
-      analytics: ["#edf3f8", "#315d82"],
-      observability: ["#f0f0ec", "#686b70"]
+      user: ["#eefaf5", "#1f9a81"],
+      edge: ["#f3f0ff", "#7563d8"],
+      gateway: ["#f3f0ff", "#7563d8"],
+      app: ["#eefaf5", "#1f9a81"],
+      service: ["#eef5ff", "#2d6cdf"],
+      database: ["#fff6dd", "#b87905"],
+      cache: ["#fff6dd", "#b87905"],
+      queue: ["#eef5ff", "#2d6cdf"],
+      storage: ["#fff6dd", "#b87905"],
+      analytics: ["#eef5ff", "#2d6cdf"],
+      observability: ["#f4f5f6", "#5e6670"]
     };
 
     function slug(value) {
@@ -1042,27 +1794,29 @@
       els.diagramSvg.innerHTML = "";
       const svg = els.diagramSvg;
       const theme = els.theme.value;
-      const bg = theme === "incident" ? "#fff8f3" : theme === "executive" ? "#f8faf7" : "#ffffff";
+      const bg = theme === "incident" ? "#fffaf5" : theme === "executive" ? "#fbfcfb" : "#ffffff";
 
       svg.insertAdjacentHTML("beforeend", `
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5e6267"></path>
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#202429"></path>
           </marker>
           <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#25231f" flood-opacity="0.12"/>
+            <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#17202a" flood-opacity="0.10"/>
           </filter>
+          <pattern id="canvasDots" width="18" height="18" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#d9dde2"></circle>
+          </pattern>
         </defs>
         <rect width="1200" height="750" fill="${bg}"></rect>
-        <text x="42" y="54" font-size="24" font-weight="760" fill="#1d1d1f">${escapeXml(model.title)}</text>
-        <text x="42" y="78" font-size="13" fill="#686b70">Generated locally from prompt. Edit the diagram code to refine structure.</text>
+        <rect width="1200" height="750" fill="url(#canvasDots)" opacity="0.85"></rect>
       `);
 
       for (const group of model.groups) {
         const groupSvg = `
           <g>
-            <rect x="${group.x}" y="${group.y}" width="${group.w}" height="${group.h}" rx="8" fill="rgba(23,107,135,0.04)" stroke="#b8c9ce" stroke-width="1.5" stroke-dasharray="8 7"></rect>
-            <text x="${group.x + 18}" y="${group.y + 28}" font-size="13" font-weight="700" fill="#0d4f63">${escapeXml(group.label)}</text>
+            <rect x="${group.x}" y="${group.y}" width="${group.w}" height="${group.h}" rx="10" fill="rgba(255,255,255,0.38)" stroke="#8c949c" stroke-width="1.4" stroke-dasharray="8 7"></rect>
+            <text x="${group.x + 18}" y="${group.y + 30}" font-size="14" font-weight="720" fill="#202429">${escapeXml(group.label)}</text>
           </g>`;
         svg.insertAdjacentHTML("beforeend", groupSvg);
       }
@@ -1079,9 +1833,9 @@
         const path = `M ${start.x} ${start.y} C ${midX} ${start.y + curve}, ${midX} ${end.y - curve}, ${end.x} ${end.y}`;
         svg.insertAdjacentHTML("beforeend", `
           <g>
-            <path d="${path}" fill="none" stroke="#777b80" stroke-width="1.6" marker-end="url(#arrow)"></path>
-            <rect x="${midX - 36}" y="${midY - 12}" width="72" height="22" rx="6" fill="#ffffff" stroke="#e0ddd5"></rect>
-            <text x="${midX}" y="${midY + 4}" text-anchor="middle" font-size="10" fill="#5f6266">${escapeXml(edge.label)}</text>
+            <path d="${path}" fill="none" stroke="#22262b" stroke-width="1.55" marker-end="url(#arrow)"></path>
+            <rect x="${midX - 35}" y="${midY - 12}" width="70" height="22" rx="6" fill="#ffffff" stroke="#e2e5e8"></rect>
+            <text x="${midX}" y="${midY + 4}" text-anchor="middle" font-size="10" fill="#4d545c">${escapeXml(edge.label)}</text>
           </g>
         `);
       }
@@ -1098,7 +1852,7 @@
         }).join("");
         svg.insertAdjacentHTML("beforeend", `
           <g filter="url(#softShadow)" data-node-id="${escapeXml(node.id)}" class="${selectedNodeId === node.id ? "node-selected" : ""}" style="cursor: grab;">
-            <rect x="${node.x - 70}" y="${node.y - 36}" width="140" height="72" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"></rect>
+            <rect x="${node.x - 70}" y="${node.y - 36}" width="140" height="72" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.45"></rect>
             <path d="${icon}" transform="translate(${node.x - 54} ${node.y - 11})" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             ${labelSvg}
           </g>
@@ -1111,7 +1865,7 @@
       updateStats();
       updateArchitectureReview();
       if (!options.silent) saveHistory();
-      setStatus("Rendered");
+      setStatus("描画済み");
     }
 
     function pointToward(a, b, distance) {
@@ -1270,23 +2024,23 @@
       if (api) model.edges.push({ from: api.id, to: newId, label: edgeLabel });
       els.followUp.value = "";
       render(model, { silent: true });
-      toast("Edit applied");
+      toast("編集を適用しました");
     }
 
     function updateStats() {
       els.nodeCount.textContent = String(model.nodes.length);
       els.edgeCount.textContent = String(model.edges.length);
       els.groupCount.textContent = String(model.groups.length);
-      els.summary.textContent = `${model.nodes.length} nodes, ${model.edges.length} edges`;
+      els.summary.textContent = ` ノード、 接続`;
     }
 
     function updateArchitectureReview() {
       const meta = model.meta;
       if (!meta) {
-        els.architectureReview.textContent = "No architecture metadata loaded.";
+        els.architectureReview.textContent = "アーキテクチャメタデータはまだ読み込まれていません。";
         return;
       }
-      const qualityGoals = Array.isArray(meta.qualityGoals) ? meta.qualityGoals.slice(0, 4).join(", ") : "not specified";
+      const qualityGoals = Array.isArray(meta.qualityGoals) ? meta.qualityGoals.slice(0, 4).join(", ") : "未指定";
       const decisions = Array.isArray(meta.decisions) ? meta.decisions.length : 0;
       const risks = Array.isArray(meta.risks) ? meta.risks.length : 0;
       const findings = Array.isArray(meta.reviewFindings) ? meta.reviewFindings : [];
@@ -1299,9 +2053,9 @@
         return `<li><strong>${status}</strong> ${pillar}: ${text}</li>`;
       }).join("");
       els.architectureReview.innerHTML = `
-        <div><strong>Viewpoint:</strong> ${escapeXml(meta.viewpoint || "not specified")}</div>
-        <div><strong>Quality goals:</strong> ${escapeXml(qualityGoals)}</div>
-        <div><strong>Decisions:</strong> ${decisions} / <strong>Risks:</strong> ${risks} / <strong>Warnings:</strong> ${warningCount} / <strong>Failures:</strong> ${failCount}</div>
+        <div><strong>Viewpoint:</strong> ${escapeXml(meta.viewpoint || "未指定")}</div>
+        <div><strong>品質目標:</strong> ${escapeXml(qualityGoals)}</div>
+        <div><strong>意思決定:</strong> ${decisions} / <strong>リスク:</strong> ${risks} / <strong>警告:</strong> ${warningCount} / <strong>失敗:</strong> ${failCount}</div>
         ${findingHtml ? `<ul style="margin:8px 0 0; padding-left:18px;">${findingHtml}</ul>` : ""}
       `;
     }
@@ -1332,7 +2086,7 @@
       const history = getHistory();
       els.history.innerHTML = "";
       if (!history.length) {
-        els.history.innerHTML = '<div class="hint">No saved generations yet.</div>';
+        els.history.innerHTML = '<div class="hint">保存された生成履歴はまだありません。</div>';
         return;
       }
       for (const entry of history) {
@@ -1342,7 +2096,7 @@
         button.addEventListener("click", () => {
           els.prompt.value = entry.prompt;
           render(entry.json ? parseCodexJson(entry.json) : parseDsl(entry.dsl));
-          toast("History restored");
+          toast("履歴を復元しました");
         });
         els.history.appendChild(button);
       }
@@ -1368,14 +2122,14 @@
 
     async function copyDsl() {
       await navigator.clipboard.writeText(els.dsl.value);
-      toast("Diagram code copied");
+      toast("図コードをコピーしました");
     }
 
     async function copyCurrentJson() {
       const value = JSON.stringify(model, null, 2);
       els.codexJson.value = value;
       await navigator.clipboard.writeText(value);
-      toast("Current JSON copied");
+      toast("現在の JSON をコピーしました");
     }
 
     function download(filename, mime, content) {
@@ -1398,7 +2152,7 @@
 
     function downloadSvg() {
       download("architecture-diagram.svg", "image/svg+xml", getSvgSource());
-      toast("SVG exported");
+      toast("SVG を書き出しました");
     }
 
     function downloadPng() {
@@ -1424,7 +2178,7 @@
           link.remove();
           URL.revokeObjectURL(pngUrl);
           URL.revokeObjectURL(url);
-          toast("PNG exported");
+          toast("PNG を書き出しました");
         }, "image/png");
       };
       img.src = url;
@@ -1470,7 +2224,7 @@
     function updateSelectedNode() {
       const node = model.nodes.find((item) => item.id === selectedNodeId);
       if (!node) {
-        toast("Select a node first");
+        toast("先にノードを選択してください");
         return;
       }
       node.label = els.nodeLabel.value.trim() || node.label;
@@ -1478,13 +2232,13 @@
       node.x = clamp(Number(els.nodeX.value) || node.x, 80, 1120);
       node.y = clamp(Number(els.nodeY.value) || node.y, 110, 660);
       render(model);
-      toast("Node updated");
+      toast("ノードを更新しました");
     }
 
     function duplicateSelectedNode() {
       const node = model.nodes.find((item) => item.id === selectedNodeId);
       if (!node) {
-        toast("Select a node first");
+        toast("先にノードを選択してください");
         return;
       }
       const taken = new Set(model.nodes.map((item) => item.id));
@@ -1495,12 +2249,12 @@
       selectedNodeId = copy.id;
       render(model);
       updateInspectorFromSelection();
-      toast("Node duplicated");
+      toast("ノードを複製しました");
     }
 
     function deleteSelectedNode() {
       if (!selectedNodeId) {
-        toast("Select a node first");
+        toast("先にノードを選択してください");
         return;
       }
       model.nodes = model.nodes.filter((node) => node.id !== selectedNodeId);
@@ -1508,7 +2262,7 @@
       selectedNodeId = "";
       render(model);
       updateInspectorFromSelection();
-      toast("Node deleted");
+      toast("ノードを削除しました");
     }
 
     function updateInspectorFromSelection() {
@@ -1564,12 +2318,12 @@
       if (!dragState) return;
       dragState = null;
       render(model);
-      toast("Layout updated");
+      toast("レイアウトを更新しました");
     }
 
     function downloadJson() {
       download("architecture-diagram.json", "application/json", JSON.stringify(model, null, 2));
-      toast("JSON exported");
+      toast("JSON を書き出しました");
     }
 
     function downloadMarkdown() {
@@ -1605,14 +2359,14 @@
         "```"
       ];
       download("architecture-diagram.md", "text/markdown", lines.join("\n"));
-      toast("Markdown exported");
+      toast("Markdown を書き出しました");
     }
 
     document.querySelectorAll("[data-preset]").forEach((button) => {
       button.addEventListener("click", () => {
         els.prompt.value = presets[button.dataset.preset];
         generateFromCurrentInput();
-        toast("Preset loaded");
+        toast("プリセットを読み込みました");
       });
     });
 
@@ -1622,20 +2376,20 @@
       try {
         selectedNodeId = "";
         render(parseCodexJson(els.codexJson.value));
-        toast("Codex JSON loaded");
+        toast("Codex JSON を読み込みました");
       } catch (error) {
-        toast(error instanceof Error ? error.message : "Invalid JSON");
+        toast(error instanceof Error ? error.message : "JSON が不正です");
       }
     });
     els.copyCurrentJson.addEventListener("click", copyCurrentJson);
     els.reset.addEventListener("click", () => {
       els.prompt.value = presets.saas;
       generateFromCurrentInput();
-      toast("Reset");
+      toast("リセットしました");
     });
     els.renderDsl.addEventListener("click", () => {
       render(parseDsl(els.dsl.value));
-      toast("Code rendered");
+      toast("コードから描画しました");
     });
     els.codePanel.addEventListener("input", () => {
       els.dsl.value = els.codePanel.value;
@@ -1663,7 +2417,7 @@
       reader.onload = () => {
         els.imagePreview.src = String(reader.result);
         els.imagePreview.style.display = "block";
-        toast("Image imported");
+        toast("画像を読み込みました");
       };
       reader.readAsDataURL(file);
     });
@@ -1678,7 +2432,7 @@
     els.fit.addEventListener("click", () => {
       els.zoom.value = "100";
       els.diagramCard.style.transform = "scale(1)";
-      toast("Fit to stage");
+      toast("全体表示に戻しました");
     });
     els.viewDiagram.addEventListener("click", () => setView("diagram"));
     els.viewCode.addEventListener("click", () => setView("code"));
