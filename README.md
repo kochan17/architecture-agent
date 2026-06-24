@@ -1,8 +1,8 @@
-# Rchitecture Agent
+# Architecture Agent
 
 Codex/Claude Codeで指示して、外部の生成AI APIを使わずにソフトウェアアーキテクチャ図を作るためのローカルツールです。
 
-Rchitecture Agentは、ブラウザ上の図編集ツールと、Codexが参照するアーキテクチャ・スキルパックで構成されています。Codexが `codex-diagram.json` を編集し、ブラウザは描画・手動編集・エクスポートを担当します。
+Architecture Agentは、ブラウザ上の図編集ツールと、Codexが参照するアーキテクチャ・スキルパックで構成されています。Codexが `codex-diagram.json` を編集し、ブラウザは描画・手動編集・エクスポートを担当します。
 
 ## Features
 
@@ -23,8 +23,8 @@ Rchitecture Agentは、ブラウザ上の図編集ツールと、Codexが参照�
 ### Option A: Clone
 
 ```bash
-git clone https://github.com/kochan17/rchitecture-agent.git
-cd rchitecture-agent
+git clone https://github.com/kochan17/architecture-agent.git
+cd architecture-agent
 npm run check
 open outputs/architecture-studio.html
 ```
@@ -34,17 +34,17 @@ open outputs/architecture-studio.html
 After this repository is public, your friends can install directly from GitHub:
 
 ```bash
-npm install -g github:kochan17/rchitecture-agent
-rchitecture-agent init my-architecture
-rchitecture-agent open my-architecture
+npm install -g github:kochan17/architecture-agent
+architecture-agent init my-architecture
+architecture-agent open my-architecture
 ```
 
 Or run without global install:
 
 ```bash
-npx github:kochan17/rchitecture-agent init my-architecture
+npx github:kochan17/architecture-agent init my-architecture
 cd my-architecture
-node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json
+node skills/architecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json
 ```
 
 ### Option C: Install only the agent skill
@@ -52,7 +52,7 @@ node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/cod
 If you only want the Codex/Claude Code skill pack and do not need the browser studio or CLI:
 
 ```bash
-npx skills add kochan17/rchitecture-agent/skills
+npx skills add kochan17/architecture-agent/skills
 ```
 
 For a local checkout:
@@ -61,30 +61,30 @@ For a local checkout:
 npx skills add ./skills
 ```
 
-After installing the skill, ask your agent to use `rchitecture-agent` when creating or reviewing architecture diagrams.
+After installing the skill, ask your agent to use `architecture-agent` when creating or reviewing architecture diagrams.
 
 ## CLI
 
 ```bash
-rchitecture-agent init [directory]
+architecture-agent init [directory]
 ```
 
 Copies the browser studio, sample architecture JSON, and skill pack into a working directory.
 
 ```bash
-rchitecture-agent open [directory]
+architecture-agent open [directory]
 ```
 
 Opens `outputs/architecture-studio.html`.
 
 ```bash
-rchitecture-agent validate [json-file]
+architecture-agent validate [json-file]
 ```
 
 Validates `outputs/codex-diagram.json` or another compatible JSON file.
 
 ```bash
-rchitecture-agent where
+architecture-agent where
 ```
 
 Prints the installed package path.
@@ -96,7 +96,7 @@ Prints the installed package path.
    - Example: `GCP + Cloud Run + Cloud SQL のB2B SaaS構成を、セキュリティと運用重視で作って`
    - Example: `AWS + PostgreSQL + SQS のSaaS構成を、Well-Architected観点でレビュー付きにして`
    - Example: `MySQLを使う構成に変えて、バックアップ、レプリケーション、権限設計も入れて`
-3. The agent should read `skills/rchitecture-agent/SKILL.md`.
+3. The agent should read `skills/architecture-agent/SKILL.md`.
 4. The agent updates `outputs/codex-diagram.json`.
 5. Run validation:
 
@@ -113,7 +113,7 @@ npm run validate
 The skill pack lives in:
 
 ```text
-skills/rchitecture-agent/
+skills/architecture-agent/
 ```
 
 Important files:

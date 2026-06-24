@@ -1,10 +1,10 @@
 {
-  "name": "rchitecture-agent",
+  "name": "architecture-agent",
   "version": "0.1.0",
   "description": "Codex-controlled architecture diagram studio with local best-practice skill packs.",
   "type": "module",
   "bin": {
-    "rchitecture-agent": "./bin/rchitecture-agent.mjs"
+    "architecture-agent": "./bin/architecture-agent.mjs"
   },
   "files": [
     "bin",
@@ -14,8 +14,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "check": "node -e \"const fs=require('fs'); const html=fs.readFileSync('outputs/architecture-studio.html','utf8'); const m=html.match(/<script>([\\s\\S]*)<\\/script>/); if(!m) throw new Error('script not found'); new Function(m[1]); console.log('JS syntax OK');\" && node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json",
-    "validate": "node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json"
+    "check": "node -e \"const fs=require('fs'); const html=fs.readFileSync('outputs/architecture-studio.html','utf8'); const m=html.match(/<script>([\\s\\S]*)<\\/script>/); if(!m) throw new Error('script not found'); new Function(m[1]); console.log('JS syntax OK');\" && node skills/architecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json",
+    "validate": "node skills/architecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json"
   },
   "keywords": [
     "architecture",

@@ -1,4 +1,4 @@
-# Rchitecture Agent を Codex で操作する方法
+# Architecture Agent を Codex で操作する方法
 
 このツールは生成AI APIを使いません。図の生成・変更は Codex が `codex-diagram.json` を編集し、ブラウザ側はそれを描画・手動編集・書き出しするだけです。
 
@@ -8,10 +8,10 @@
    - 例: 「Next.js + Supabase + Stripe + Resend のSaaS構成図にして」
    - 例: 「Redis と Queue を追加して、非同期処理の流れを見えるようにして」
    - 例: 「Kubernetes構成に変えて、Ingress、Service、Deployment、Postgresを入れて」
-2. Codex が `skills/rchitecture-agent/` の該当リファレンスを読む
+2. Codex が `skills/architecture-agent/` の該当リファレンスを読む
 3. Codex が `codex-diagram.json` を編集する
 4. Codex が検証を実行する
-   - `node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json`
+   - `node skills/architecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json`
 5. `architecture-studio.html` を開き、`Codex JSON` に `codex-diagram.json` の内容を貼り付けて `Load JSON` を押す
 6. 必要ならブラウザ上でノードをドラッグ・編集する
 7. SVG / PNG / JSON / Markdown で書き出す
