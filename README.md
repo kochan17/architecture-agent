@@ -7,6 +7,7 @@ Architecture Agent は、ブラウザ上で使う図編集ツールと、Codex /
 ## 特徴
 
 - アプリ側で生成 AI API を呼ばない prompt-to-diagram 形式のワークフロー
+- Next.js で起動できるローカル studio
 - Codex / Claude Code が編集しやすい JSON ベースのアーキテクチャモデル
 - ローカルブラウザで動く図編集ツール
 - ノードのドラッグ、ラベル編集、DSL 描画、SVG / PNG / JSON / Markdown エクスポート
@@ -19,14 +20,36 @@ Architecture Agent は、ブラウザ上で使う図編集ツールと、Codex /
   - MySQL の設計観点
 - 図の構造とアーキテクチャ品質を確認する検証スクリプト
 
+## 技術スタック
+
+- Next.js App Router / Route Handlers
+- Node.js CLI
+- ローカル HTML / SVG renderer
+- Codex / Claude Code skill pack
+- JSON ベースの図モデル
+
 ## クイックスタート
 
-### A. リポジトリを clone して使う
+### A. Next.js studio として起動する
 
 ```bash
 git clone https://github.com/kochan17/architecture-agent.git
 cd architecture-agent
+npm install
+npm run dev
+```
+
+ブラウザで `http://localhost:3000` を開きます。
+
+検証:
+
+```bash
 npm run check
+```
+
+単体 HTML として直接開くこともできます。
+
+```bash
 open outputs/architecture-studio.html
 ```
 
@@ -103,7 +126,7 @@ architecture-agent where
 npm run validate
 ```
 
-6. `outputs/architecture-studio.html` を開きます。
+6. `npm run dev` で Next.js studio を起動します。
 7. `codex-diagram.json` の内容を `Codex JSON` に貼り付け、`Load JSON` を押します。
 8. 必要に応じて SVG、PNG、JSON、Markdown として書き出します。
 
