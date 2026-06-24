@@ -1,0 +1,32 @@
+{
+  "name": "archdraft-studio",
+  "version": "0.1.0",
+  "description": "Codex-controlled architecture diagram studio with local best-practice skill packs.",
+  "type": "module",
+  "bin": {
+    "archdraft": "./bin/archdraft.mjs"
+  },
+  "files": [
+    "bin",
+    "outputs",
+    "architecture-skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node -e \"const fs=require('fs'); const html=fs.readFileSync('outputs/architecture-studio.html','utf8'); const m=html.match(/<script>([\\s\\S]*)<\\/script>/); if(!m) throw new Error('script not found'); new Function(m[1]); console.log('JS syntax OK');\" && node architecture-skills/architecture-designer/scripts/validate_architecture_json.mjs outputs/codex-diagram.json",
+    "validate": "node architecture-skills/architecture-designer/scripts/validate_architecture_json.mjs outputs/codex-diagram.json"
+  },
+  "keywords": [
+    "architecture",
+    "diagram",
+    "codex",
+    "claude-code",
+    "c4",
+    "aws",
+    "gcp",
+    "postgresql",
+    "mysql"
+  ],
+  "license": "MIT"
+}

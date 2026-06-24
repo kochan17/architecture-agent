@@ -1,0 +1,1718 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ArchDraft Studio</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f4ef;
+      --panel: #fffefa;
+      --panel-strong: #ffffff;
+      --ink: #1d1d1f;
+      --muted: #686b70;
+      --line: #d9d3c6;
+      --accent: #176b87;
+      --accent-strong: #0d4f63;
+      --success: #31785f;
+      --warning: #a25f12;
+      --danger: #9b3030;
+      --shadow: 0 16px 45px rgba(40, 36, 29, 0.13);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 38%),
+        radial-gradient(circle at 12% 0%, rgba(23, 107, 135, 0.13), transparent 24rem),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    button,
+    textarea,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      color: var(--ink);
+      min-height: 38px;
+      border-radius: 7px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      border-color: #9f998d;
+      background: #fbfaf6;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button.primary {
+      border-color: var(--accent-strong);
+      background: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr) 360px;
+      grid-template-rows: 58px minmax(0, 1fr);
+    }
+
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 254, 250, 0.9);
+      backdrop-filter: blur(14px);
+      position: relative;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 30px;
+      height: 30px;
+      color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .top-actions,
+    .toolbar-row,
+    .preset-grid,
+    .segmented {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .workspace {
+      min-height: 0;
+      display: contents;
+    }
+
+    aside,
+    main {
+      min-height: 0;
+    }
+
+    .left,
+    .right {
+      background: rgba(255, 254, 250, 0.82);
+      border-right: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .right {
+      border-right: 0;
+      border-left: 1px solid var(--line);
+    }
+
+    .section {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section h2 {
+      font-size: 12px;
+      line-height: 1.2;
+      margin: 0 0 10px;
+      color: #4b4c4d;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .prompt-box,
+    .dsl-editor,
+    .follow-up {
+      width: 100%;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-strong);
+      color: var(--ink);
+      outline: none;
+      line-height: 1.45;
+      padding: 12px;
+    }
+
+    .prompt-box {
+      min-height: 202px;
+    }
+
+    .follow-up {
+      min-height: 82px;
+    }
+
+    .dsl-editor {
+      min-height: 360px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      white-space: pre;
+    }
+
+    textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(23, 107, 135, 0.14);
+    }
+
+    .preset-grid {
+      flex-wrap: wrap;
+    }
+
+    .preset {
+      min-height: 32px;
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    .canvas-shell {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 52px minmax(0, 1fr) 44px;
+      background:
+        linear-gradient(rgba(29, 29, 31, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29, 29, 31, 0.04) 1px, transparent 1px),
+        #fbfaf6;
+      background-size: 22px 22px;
+    }
+
+    .canvas-toolbar,
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: rgba(251, 250, 246, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .statusbar {
+      border-bottom: 0;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .segmented {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 3px;
+      background: var(--panel);
+    }
+
+    .segmented button {
+      min-height: 30px;
+      border: 0;
+      background: transparent;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+
+    .segmented button.active {
+      background: #e7f1f3;
+      color: var(--accent-strong);
+    }
+
+    .zoom {
+      width: 120px;
+      accent-color: var(--accent);
+    }
+
+    .stage {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+    }
+
+    .diagram-card {
+      width: min(1180px, 100%);
+      aspect-ratio: 16 / 10;
+      min-height: 540px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    #diagramSvg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="text"] {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-strong);
+      color: var(--ink);
+      padding: 0 10px;
+      outline: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .history {
+      display: grid;
+      gap: 8px;
+    }
+
+    .image-preview {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      margin-top: 10px;
+      display: none;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mini-grid label {
+      min-width: 0;
+    }
+
+    .node-selected rect {
+      stroke-width: 3;
+      stroke: #0d4f63;
+    }
+
+    .history button {
+      min-height: auto;
+      justify-content: flex-start;
+      text-align: left;
+      padding: 10px;
+      white-space: normal;
+      line-height: 1.35;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #1d1d1f;
+      color: white;
+      padding: 11px 13px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+      font-size: 13px;
+      z-index: 20;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 320px minmax(0, 1fr);
+      }
+
+      .right {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        height: 360px;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        height: auto;
+        min-height: 100vh;
+        display: block;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        min-height: 58px;
+      }
+
+      .top-actions {
+        display: none;
+      }
+
+      .left,
+      .right {
+        border: 0;
+      }
+
+      .canvas-shell {
+        min-height: 620px;
+      }
+
+      .canvas-toolbar {
+        align-items: flex-start;
+        height: auto;
+        min-height: 76px;
+        padding: 10px;
+        flex-direction: column;
+      }
+
+      .toolbar-row {
+        flex-wrap: wrap;
+      }
+
+      .stage {
+        padding: 12px;
+      }
+
+      .diagram-card {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand" aria-label="ArchDraft Studio">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M5 9.5 16 4l11 5.5v13L16 28 5 22.5z" fill="none" stroke="currentColor" stroke-width="2" />
+          <path d="M9 11.5 16 8l7 3.5M9 20.5 16 24l7-3.5M16 8v16" fill="none" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <div>
+          <div class="brand-title">ArchDraft Studio</div>
+          <div class="brand-subtitle">Prompt-to-diagram workspace</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="copyDslTop" title="Copy diagram code">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
+          Copy DSL
+        </button>
+        <button id="downloadSvgTop" title="Download SVG">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+          SVG
+        </button>
+        <button id="downloadPngTop" class="primary" title="Download PNG">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+          PNG
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="left">
+        <section class="section">
+          <h2>Prompt</h2>
+          <textarea id="prompt" class="prompt-box" spellcheck="false"></textarea>
+          <div class="hint">Describe components, data flow, boundaries, and cloud provider. The generator extracts structure into editable diagram code.</div>
+        </section>
+
+        <section class="section">
+          <h2>Presets</h2>
+          <div class="preset-grid">
+            <button class="preset" data-preset="saas">SaaS app</button>
+            <button class="preset" data-preset="serverless">Serverless API</button>
+            <button class="preset" data-preset="data">Data pipeline</button>
+            <button class="preset" data-preset="k8s">Kubernetes</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Options</h2>
+          <div class="field-row">
+            <label>Diagram type
+              <select id="diagramType">
+                <option value="architecture">Architecture</option>
+                <option value="flow">Flow</option>
+                <option value="data">Data flow</option>
+                <option value="sequence">Sequence</option>
+                <option value="erd">ERD</option>
+                <option value="bpmn">BPMN</option>
+                <option value="network">Network</option>
+                <option value="kubernetes">Kubernetes</option>
+              </select>
+            </label>
+            <label>Theme
+              <select id="theme">
+                <option value="technical">Technical</option>
+                <option value="executive">Executive</option>
+                <option value="incident">Incident review</option>
+              </select>
+            </label>
+          </div>
+          <button id="generate" class="primary" style="width: 100%;">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.2 5.2L19 10.4l-4.8 2.2L12 18l-2.2-5.4L5 10.4l4.8-2.2z"></path><path d="m19 16 .8 1.8 1.7.7-1.7.8L19 21l-.8-1.7-1.7-.8 1.7-.7z"></path></svg>
+            Generate diagram
+          </button>
+        </section>
+
+        <section class="section">
+          <h2>Inputs</h2>
+          <label>Source code, Terraform, SQL, or YAML
+            <textarea id="sourceInput" class="follow-up" placeholder="Paste code or config to bias generation"></textarea>
+          </label>
+          <label style="margin-top: 10px;">Codex JSON
+            <textarea id="codexJson" class="follow-up" placeholder="Paste outputs/codex-diagram.json here"></textarea>
+          </label>
+          <div class="toolbar-row" style="margin-top: 8px;">
+            <button id="loadCodexJson">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+              Load JSON
+            </button>
+            <button id="copyCurrentJson">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
+              Copy current
+            </button>
+          </div>
+          <label style="margin-top: 10px;">Image import
+            <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" />
+          </label>
+          <img id="imagePreview" class="image-preview" alt="Imported diagram preview" />
+          <div class="toolbar-row" style="margin-top: 8px;">
+            <button id="redrawImage">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h4l2-3h4l2 3h4v13H4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+              Re-draw
+            </button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Follow-up edit</h2>
+          <textarea id="followUp" class="follow-up" placeholder="Example: add Redis cache between API and database"></textarea>
+          <div class="toolbar-row" style="margin-top: 8px;">
+            <button id="applyEdit">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>
+              Apply
+            </button>
+            <button id="reset">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path></svg>
+              Reset
+            </button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>History</h2>
+          <div id="history" class="history"></div>
+        </section>
+      </aside>
+
+      <main class="canvas-shell">
+        <div class="canvas-toolbar">
+          <div class="toolbar-row">
+            <div class="segmented" aria-label="Canvas view">
+              <button id="viewDiagram" class="active">Diagram</button>
+              <button id="viewCode">Code</button>
+            </div>
+            <button id="fit">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+              Fit
+            </button>
+          </div>
+          <div class="toolbar-row">
+            <label style="display:flex; align-items:center; gap:8px;">Zoom
+              <input id="zoom" class="zoom" type="range" min="70" max="140" value="100" />
+            </label>
+          </div>
+        </div>
+
+        <div id="stage" class="stage">
+          <div id="diagramCard" class="diagram-card">
+            <svg id="diagramSvg" viewBox="0 0 1200 750" role="img" aria-label="Generated architecture diagram"></svg>
+          </div>
+          <textarea id="codePanel" class="dsl-editor" spellcheck="false" style="display:none;"></textarea>
+        </div>
+
+        <div class="statusbar">
+          <span id="status">Ready</span>
+          <span id="summary">0 nodes, 0 edges</span>
+        </div>
+      </main>
+
+      <aside class="right">
+        <section class="section">
+          <h2>Inspector</h2>
+          <div class="mini-grid">
+            <label>Label
+              <input id="nodeLabel" type="text" placeholder="Select a node" />
+            </label>
+            <label>Type
+              <select id="nodeType">
+                <option value="user">user</option>
+                <option value="edge">edge</option>
+                <option value="gateway">gateway</option>
+                <option value="app">app</option>
+                <option value="service">service</option>
+                <option value="database">database</option>
+                <option value="cache">cache</option>
+                <option value="queue">queue</option>
+                <option value="storage">storage</option>
+                <option value="analytics">analytics</option>
+                <option value="observability">observability</option>
+              </select>
+            </label>
+            <label>X
+              <input id="nodeX" type="text" inputmode="numeric" />
+            </label>
+            <label>Y
+              <input id="nodeY" type="text" inputmode="numeric" />
+            </label>
+          </div>
+          <div class="toolbar-row" style="margin-top: 8px; flex-wrap: wrap;">
+            <button id="updateNode">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+              Update
+            </button>
+            <button id="duplicateNode">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M4 16V6a2 2 0 0 1 2-2h10"></path></svg>
+              Duplicate
+            </button>
+            <button id="deleteNode">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>
+              Delete
+            </button>
+          </div>
+          <div class="hint">Click or drag nodes on the canvas. The code panel stays editable for precise changes.</div>
+        </section>
+
+        <section class="section">
+          <h2>Diagram code</h2>
+          <textarea id="dsl" class="dsl-editor" spellcheck="false"></textarea>
+          <div class="toolbar-row" style="margin-top: 8px;">
+            <button id="renderDsl">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 3 14 9-14 9z"></path></svg>
+              Render
+            </button>
+            <button id="copyDsl">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"></path></svg>
+              Copy
+            </button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Model</h2>
+          <div class="stats">
+            <div class="stat"><strong id="nodeCount">0</strong><span>nodes</span></div>
+            <div class="stat"><strong id="edgeCount">0</strong><span>edges</span></div>
+            <div class="stat"><strong id="groupCount">0</strong><span>groups</span></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Architecture review</h2>
+          <div id="architectureReview" class="hint">Load Codex JSON with meta fields to show quality goals, decisions, risks, and findings.</div>
+        </section>
+
+        <section class="section">
+          <h2>Export</h2>
+          <div class="toolbar-row" style="flex-wrap: wrap;">
+            <button id="downloadSvg">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+              SVG
+            </button>
+            <button id="downloadPng">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+              PNG
+            </button>
+            <button id="downloadJson">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path><path d="M16 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2"></path><path d="m10 9-3 3 3 3"></path><path d="m14 9 3 3-3 3"></path></svg>
+              JSON
+            </button>
+            <button id="downloadMd">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="M8 16V8l4 5 4-5v8"></path></svg>
+              MD
+            </button>
+          </div>
+          <div class="hint">Exports are generated locally in your browser. No prompt or diagram data leaves this page.</div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const presets = {
+      saas: "Create a production SaaS architecture on AWS. Users enter through CloudFront and WAF, then an application load balancer routes traffic to a React web app and Node API services in a private VPC. The API uses PostgreSQL, Redis cache, S3 object storage, a queue for background jobs, observability, and an admin console.",
+      serverless: "Design a serverless API platform. Mobile and web clients call API Gateway. Lambda functions handle auth, billing, notifications, and reporting. DynamoDB stores operational data, S3 stores files, EventBridge coordinates events, and CloudWatch monitors errors.",
+      data: "Generate a data pipeline architecture. Product databases and event streams flow into Kafka, then Spark jobs transform data into a warehouse. BI dashboards query curated marts, ML jobs train models, and alerts track freshness and quality.",
+      k8s: "Draw a Kubernetes microservices platform. Public traffic reaches an ingress controller, then frontend, identity, catalog, checkout, and worker services. Services use Postgres, Redis, object storage, message queue, service mesh, and observability."
+    };
+
+    const els = {
+      prompt: document.getElementById("prompt"),
+      followUp: document.getElementById("followUp"),
+      sourceInput: document.getElementById("sourceInput"),
+      codexJson: document.getElementById("codexJson"),
+      loadCodexJson: document.getElementById("loadCodexJson"),
+      copyCurrentJson: document.getElementById("copyCurrentJson"),
+      imageInput: document.getElementById("imageInput"),
+      imagePreview: document.getElementById("imagePreview"),
+      redrawImage: document.getElementById("redrawImage"),
+      diagramType: document.getElementById("diagramType"),
+      theme: document.getElementById("theme"),
+      generate: document.getElementById("generate"),
+      applyEdit: document.getElementById("applyEdit"),
+      reset: document.getElementById("reset"),
+      dsl: document.getElementById("dsl"),
+      codePanel: document.getElementById("codePanel"),
+      renderDsl: document.getElementById("renderDsl"),
+      copyDsl: document.getElementById("copyDsl"),
+      copyDslTop: document.getElementById("copyDslTop"),
+      downloadSvg: document.getElementById("downloadSvg"),
+      downloadSvgTop: document.getElementById("downloadSvgTop"),
+      downloadPng: document.getElementById("downloadPng"),
+      downloadPngTop: document.getElementById("downloadPngTop"),
+      downloadJson: document.getElementById("downloadJson"),
+      downloadMd: document.getElementById("downloadMd"),
+      diagramSvg: document.getElementById("diagramSvg"),
+      diagramCard: document.getElementById("diagramCard"),
+      nodeLabel: document.getElementById("nodeLabel"),
+      nodeType: document.getElementById("nodeType"),
+      nodeX: document.getElementById("nodeX"),
+      nodeY: document.getElementById("nodeY"),
+      updateNode: document.getElementById("updateNode"),
+      duplicateNode: document.getElementById("duplicateNode"),
+      deleteNode: document.getElementById("deleteNode"),
+      zoom: document.getElementById("zoom"),
+      fit: document.getElementById("fit"),
+      viewDiagram: document.getElementById("viewDiagram"),
+      viewCode: document.getElementById("viewCode"),
+      status: document.getElementById("status"),
+      summary: document.getElementById("summary"),
+      nodeCount: document.getElementById("nodeCount"),
+      edgeCount: document.getElementById("edgeCount"),
+      groupCount: document.getElementById("groupCount"),
+      architectureReview: document.getElementById("architectureReview"),
+      history: document.getElementById("history"),
+      toast: document.getElementById("toast")
+    };
+
+    let model = { title: "Architecture", groups: [], nodes: [], edges: [] };
+    let selectedNodeId = "";
+    let dragState = null;
+    let importedImageName = "";
+
+    const typeColors = {
+      user: ["#f7efe1", "#9b6a22"],
+      edge: ["#e8f2f4", "#176b87"],
+      gateway: ["#e8f2f4", "#176b87"],
+      app: ["#f2f5ea", "#517037"],
+      service: ["#eef0f7", "#4e5c8f"],
+      database: ["#f8ecec", "#9b3030"],
+      cache: ["#fff0db", "#a25f12"],
+      queue: ["#f2eaf6", "#7b4c91"],
+      storage: ["#eaf5f0", "#31785f"],
+      analytics: ["#edf3f8", "#315d82"],
+      observability: ["#f0f0ec", "#686b70"]
+    };
+
+    function slug(value) {
+      return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || "node";
+    }
+
+    function uniqueId(base, taken) {
+      let id = slug(base);
+      let index = 2;
+      while (taken.has(id)) {
+        id = `${slug(base)}-${index}`;
+        index += 1;
+      }
+      taken.add(id);
+      return id;
+    }
+
+    function includesAny(text, terms) {
+      return terms.some((term) => text.includes(term));
+    }
+
+    function addNode(nodes, taken, label, type, x, y) {
+      const id = uniqueId(label, taken);
+      nodes.push({ id, label, type, x, y });
+      return id;
+    }
+
+    function generateModel(prompt, options) {
+      const text = (prompt || presets.saas).toLowerCase();
+      if (options.diagramType === "sequence") return generateSequenceModel(text);
+      if (options.diagramType === "erd") return generateErdModel(text);
+      if (options.diagramType === "bpmn") return generateBpmnModel(text);
+      if (options.diagramType === "network") return generateNetworkModel(text);
+      if (options.diagramType === "kubernetes") return generateKubernetesModel(text);
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const groups = [];
+      const provider = includesAny(text, ["azure"]) ? "Azure" : includesAny(text, ["gcp", "google cloud"]) ? "Google Cloud" : "AWS";
+      const title = options.diagramType === "data" ? "Data Platform Flow" : options.diagramType === "flow" ? "Request Flow" : `${provider} System Architecture`;
+
+      const user = addNode(nodes, taken, includesAny(text, ["mobile"]) ? "Client apps" : "Users", "user", 84, 350);
+      const edge = addNode(nodes, taken, includesAny(text, ["cdn", "cloudfront"]) ? "CDN + WAF" : "Edge routing", "edge", 230, 350);
+      const gateway = addNode(nodes, taken, includesAny(text, ["api gateway"]) ? "API Gateway" : "Load balancer", "gateway", 390, 350);
+
+      groups.push({ id: "boundary", label: includesAny(text, ["vpc"]) ? "Private VPC" : includesAny(text, ["kubernetes", "k8s"]) ? "Kubernetes cluster" : "Application boundary", x: 505, y: 95, w: 520, h: 505 });
+
+      const app = addNode(nodes, taken, includesAny(text, ["react", "frontend", "web app"]) ? "Web app" : "Application", "app", 585, 235);
+      const api = addNode(nodes, taken, includesAny(text, ["lambda"]) ? "Functions" : "API services", "service", 585, 465);
+
+      edges.push({ from: user, to: edge, label: "request" });
+      edges.push({ from: edge, to: gateway, label: "secure route" });
+      edges.push({ from: gateway, to: app, label: "web" });
+      edges.push({ from: gateway, to: api, label: "api" });
+      edges.push({ from: app, to: api, label: "calls" });
+
+      if (includesAny(text, ["auth", "identity", "login"])) {
+        const auth = addNode(nodes, taken, "Identity service", "service", 785, 195);
+        edges.push({ from: api, to: auth, label: "validate" });
+      }
+
+      if (includesAny(text, ["postgres", "database", "db", "sql", "dynamodb", "mysql", "schema"])) {
+        const dbLabel = includesAny(text, ["dynamodb"]) ? "DynamoDB" : includesAny(text, ["mysql"]) ? "MySQL" : "PostgreSQL";
+        const db = addNode(nodes, taken, dbLabel, "database", 835, 465);
+        edges.push({ from: api, to: db, label: "read/write" });
+      }
+
+      if (includesAny(text, ["redis", "cache"])) {
+        const cache = addNode(nodes, taken, "Redis cache", "cache", 835, 325);
+        edges.push({ from: api, to: cache, label: "cache" });
+      }
+
+      if (includesAny(text, ["queue", "sqs", "rabbit", "kafka", "eventbridge", "stream"])) {
+        const queueLabel = includesAny(text, ["kafka"]) ? "Kafka stream" : includesAny(text, ["eventbridge"]) ? "Event bus" : "Job queue";
+        const queue = addNode(nodes, taken, queueLabel, "queue", 720, 575);
+        const worker = addNode(nodes, taken, includesAny(text, ["worker"]) ? "Workers" : "Consumers", "service", 935, 575);
+        edges.push({ from: api, to: queue, label: "publish" });
+        edges.push({ from: queue, to: worker, label: "consume" });
+      }
+
+      if (includesAny(text, ["s3", "storage", "object", "file"])) {
+        const storage = addNode(nodes, taken, includesAny(text, ["s3"]) ? "S3 storage" : "Object storage", "storage", 1020, 330);
+        edges.push({ from: api, to: storage, label: "files" });
+      }
+
+      if (includesAny(text, ["analytics", "warehouse", "bi", "spark", "ml", "data pipeline"])) {
+        const analytics = addNode(nodes, taken, "Analytics layer", "analytics", 1020, 465);
+        const source = nodes.find((node) => node.type === "database") || { id: api };
+        edges.push({ from: source.id, to: analytics, label: "events" });
+      }
+
+      if (includesAny(text, ["observability", "monitor", "cloudwatch", "alert", "logs"])) {
+        const obs = addNode(nodes, taken, "Observability", "observability", 1040, 155);
+        edges.push({ from: api, to: obs, label: "metrics" });
+        edges.push({ from: app, to: obs, label: "logs" });
+      }
+
+      if (nodes.length < 8) {
+        const jobs = addNode(nodes, taken, "Background jobs", "service", 805, 575);
+        edges.push({ from: api, to: jobs, label: "async" });
+      }
+
+      return { title, groups, nodes, edges };
+    }
+
+    function generateSequenceModel(text) {
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const user = addNode(nodes, taken, "Client", "user", 110, 190);
+      const web = addNode(nodes, taken, includesAny(text, ["mobile"]) ? "Mobile app" : "Web app", "app", 300, 190);
+      const api = addNode(nodes, taken, "API", "service", 490, 190);
+      const auth = addNode(nodes, taken, includesAny(text, ["auth", "login"]) ? "Auth" : "Policy", "service", 680, 190);
+      const db = addNode(nodes, taken, includesAny(text, ["dynamodb"]) ? "DynamoDB" : "Database", "database", 870, 190);
+      const worker = addNode(nodes, taken, includesAny(text, ["queue", "event", "async"]) ? "Worker" : "Async task", "queue", 1060, 190);
+      edges.push({ from: user, to: web, label: "open" });
+      edges.push({ from: web, to: api, label: "request" });
+      edges.push({ from: api, to: auth, label: "authorize" });
+      edges.push({ from: auth, to: api, label: "token" });
+      edges.push({ from: api, to: db, label: "query" });
+      edges.push({ from: db, to: api, label: "result" });
+      edges.push({ from: api, to: worker, label: "enqueue" });
+      edges.push({ from: api, to: web, label: "response" });
+      return { title: "Sequence Diagram", groups: [{ id: "lifelines", label: "Participants", x: 48, y: 108, w: 1104, h: 430 }], nodes, edges };
+    }
+
+    function generateErdModel(text) {
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const user = addNode(nodes, taken, "users\nid\nemail\nrole", "database", 210, 230);
+      const org = addNode(nodes, taken, "organizations\nid\nname\nplan", "database", 495, 230);
+      const project = addNode(nodes, taken, includesAny(text, ["file", "diagram"]) ? "files\nid\nteam_id\ntitle" : "projects\nid\norg_id\nname", "database", 780, 230);
+      const event = addNode(nodes, taken, includesAny(text, ["audit", "event"]) ? "audit_events\nid\nactor_id\naction" : "activities\nid\nproject_id\ntype", "analytics", 495, 475);
+      const asset = addNode(nodes, taken, includesAny(text, ["image", "storage"]) ? "assets\nid\nfile_id\nurl" : "versions\nid\nproject_id\nsnapshot", "storage", 780, 475);
+      edges.push({ from: user, to: org, label: "member of" });
+      edges.push({ from: org, to: project, label: "owns" });
+      edges.push({ from: project, to: event, label: "records" });
+      edges.push({ from: project, to: asset, label: "stores" });
+      edges.push({ from: user, to: event, label: "performs" });
+      return { title: "Entity Relationship Diagram", groups: [{ id: "schema", label: "Logical schema", x: 110, y: 120, w: 900, h: 445 }], nodes, edges };
+    }
+
+    function generateBpmnModel(text) {
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const start = addNode(nodes, taken, "Start event", "user", 120, 360);
+      const intake = addNode(nodes, taken, includesAny(text, ["call", "transcript"]) ? "Capture transcript" : "Receive request", "app", 310, 360);
+      const decision = addNode(nodes, taken, includesAny(text, ["approve", "review"]) ? "Review needed?" : "Decision", "gateway", 510, 360);
+      const task = addNode(nodes, taken, includesAny(text, ["generate"]) ? "Generate diagram" : "Process task", "service", 710, 260);
+      const manual = addNode(nodes, taken, "Manual adjustment", "service", 710, 470);
+      const publish = addNode(nodes, taken, includesAny(text, ["github", "pr"]) ? "Publish to PR" : "Publish result", "storage", 930, 360);
+      const end = addNode(nodes, taken, "End event", "observability", 1100, 360);
+      edges.push({ from: start, to: intake, label: "begin" });
+      edges.push({ from: intake, to: decision, label: "validate" });
+      edges.push({ from: decision, to: task, label: "auto" });
+      edges.push({ from: decision, to: manual, label: "needs edit" });
+      edges.push({ from: task, to: publish, label: "done" });
+      edges.push({ from: manual, to: publish, label: "approved" });
+      edges.push({ from: publish, to: end, label: "complete" });
+      return { title: "BPMN-style Workflow", groups: [{ id: "process", label: "Process lane", x: 58, y: 150, w: 1085, h: 430 }], nodes, edges };
+    }
+
+    function generateNetworkModel(text) {
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const internet = addNode(nodes, taken, "Internet", "user", 95, 360);
+      const edge = addNode(nodes, taken, includesAny(text, ["waf"]) ? "WAF" : "Firewall", "edge", 260, 360);
+      const publicSubnet = addNode(nodes, taken, "Public subnet", "gateway", 440, 260);
+      const privateSubnet = addNode(nodes, taken, "Private subnet", "gateway", 440, 470);
+      const app = addNode(nodes, taken, "App tier", "service", 665, 260);
+      const data = addNode(nodes, taken, "Data tier", "database", 665, 470);
+      const nat = addNode(nodes, taken, "NAT / egress", "edge", 900, 260);
+      const monitor = addNode(nodes, taken, "Monitoring", "observability", 900, 470);
+      edges.push({ from: internet, to: edge, label: "443" });
+      edges.push({ from: edge, to: publicSubnet, label: "allow" });
+      edges.push({ from: publicSubnet, to: app, label: "route" });
+      edges.push({ from: app, to: privateSubnet, label: "internal" });
+      edges.push({ from: privateSubnet, to: data, label: "db" });
+      edges.push({ from: app, to: nat, label: "egress" });
+      edges.push({ from: app, to: monitor, label: "logs" });
+      return { title: "Network Diagram", groups: [{ id: "vpc", label: "Network boundary", x: 350, y: 145, w: 665, h: 455 }], nodes, edges };
+    }
+
+    function generateKubernetesModel(text) {
+      const taken = new Set();
+      const nodes = [];
+      const edges = [];
+      const user = addNode(nodes, taken, "Users", "user", 100, 365);
+      const ingress = addNode(nodes, taken, "Ingress", "gateway", 285, 365);
+      const frontend = addNode(nodes, taken, "frontend svc", "app", 505, 245);
+      const api = addNode(nodes, taken, "api svc", "service", 505, 465);
+      const identity = addNode(nodes, taken, "identity svc", "service", 730, 245);
+      const worker = addNode(nodes, taken, "worker deploy", "queue", 730, 465);
+      const db = addNode(nodes, taken, includesAny(text, ["postgres"]) ? "Postgres" : "StatefulSet", "database", 965, 245);
+      const cache = addNode(nodes, taken, "Redis", "cache", 965, 465);
+      edges.push({ from: user, to: ingress, label: "https" });
+      edges.push({ from: ingress, to: frontend, label: "route" });
+      edges.push({ from: ingress, to: api, label: "api" });
+      edges.push({ from: api, to: identity, label: "auth" });
+      edges.push({ from: api, to: worker, label: "jobs" });
+      edges.push({ from: api, to: db, label: "sql" });
+      edges.push({ from: api, to: cache, label: "cache" });
+      return { title: "Kubernetes Architecture", groups: [{ id: "cluster", label: "Cluster", x: 385, y: 130, w: 680, h: 480 }], nodes, edges };
+    }
+
+    function render(modelToRender, options = {}) {
+      model = modelToRender;
+      els.diagramSvg.innerHTML = "";
+      const svg = els.diagramSvg;
+      const theme = els.theme.value;
+      const bg = theme === "incident" ? "#fff8f3" : theme === "executive" ? "#f8faf7" : "#ffffff";
+
+      svg.insertAdjacentHTML("beforeend", `
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5e6267"></path>
+          </marker>
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#25231f" flood-opacity="0.12"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="750" fill="${bg}"></rect>
+        <text x="42" y="54" font-size="24" font-weight="760" fill="#1d1d1f">${escapeXml(model.title)}</text>
+        <text x="42" y="78" font-size="13" fill="#686b70">Generated locally from prompt. Edit the diagram code to refine structure.</text>
+      `);
+
+      for (const group of model.groups) {
+        const groupSvg = `
+          <g>
+            <rect x="${group.x}" y="${group.y}" width="${group.w}" height="${group.h}" rx="8" fill="rgba(23,107,135,0.04)" stroke="#b8c9ce" stroke-width="1.5" stroke-dasharray="8 7"></rect>
+            <text x="${group.x + 18}" y="${group.y + 28}" font-size="13" font-weight="700" fill="#0d4f63">${escapeXml(group.label)}</text>
+          </g>`;
+        svg.insertAdjacentHTML("beforeend", groupSvg);
+      }
+
+      for (const edge of model.edges) {
+        const from = model.nodes.find((node) => node.id === edge.from);
+        const to = model.nodes.find((node) => node.id === edge.to);
+        if (!from || !to) continue;
+        const start = pointToward(from, to, 68);
+        const end = pointToward(to, from, 72);
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2;
+        const curve = Math.abs(start.y - end.y) > 80 ? 38 : 0;
+        const path = `M ${start.x} ${start.y} C ${midX} ${start.y + curve}, ${midX} ${end.y - curve}, ${end.x} ${end.y}`;
+        svg.insertAdjacentHTML("beforeend", `
+          <g>
+            <path d="${path}" fill="none" stroke="#777b80" stroke-width="1.6" marker-end="url(#arrow)"></path>
+            <rect x="${midX - 36}" y="${midY - 12}" width="72" height="22" rx="6" fill="#ffffff" stroke="#e0ddd5"></rect>
+            <text x="${midX}" y="${midY + 4}" text-anchor="middle" font-size="10" fill="#5f6266">${escapeXml(edge.label)}</text>
+          </g>
+        `);
+      }
+
+      for (const node of model.nodes) {
+        const [fill, stroke] = typeColors[node.type] || typeColors.service;
+        const icon = iconPath(node.type);
+        const labelLines = node.label.split(/\n+/).slice(0, 3);
+        const labelSvg = labelLines.map((line, index) => {
+          const weight = index === 0 ? "720" : "500";
+          const color = index === 0 ? "#1d1d1f" : "#686b70";
+          const size = index === 0 ? 13 : 10;
+          return `<text x="${node.x + 8}" y="${node.y - 8 + index * 16}" font-size="${size}" font-weight="${weight}" fill="${color}">${escapeXml(trimLabel(line, 18))}</text>`;
+        }).join("");
+        svg.insertAdjacentHTML("beforeend", `
+          <g filter="url(#softShadow)" data-node-id="${escapeXml(node.id)}" class="${selectedNodeId === node.id ? "node-selected" : ""}" style="cursor: grab;">
+            <rect x="${node.x - 70}" y="${node.y - 36}" width="140" height="72" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"></rect>
+            <path d="${icon}" transform="translate(${node.x - 54} ${node.y - 11})" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            ${labelSvg}
+          </g>
+        `);
+      }
+
+      const dsl = stringifyDsl(model);
+      els.dsl.value = dsl;
+      els.codePanel.value = dsl;
+      updateStats();
+      updateArchitectureReview();
+      if (!options.silent) saveHistory();
+      setStatus("Rendered");
+    }
+
+    function pointToward(a, b, distance) {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const length = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+      return { x: a.x + (dx / length) * distance, y: a.y + (dy / length) * distance };
+    }
+
+    function iconPath(type) {
+      const icons = {
+        user: "M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0ZM4 22a8 8 0 0 1 16 0",
+        edge: "M3 12h18M7 5h10M7 19h10",
+        gateway: "M4 6h16v12H4zM8 10h8M8 14h5",
+        app: "M4 5h16v14H4zM4 9h16M8 13h3M8 16h8",
+        service: "M12 3l8 4v10l-8 4-8-4V7zM12 3v18M4 7l8 4 8-4",
+        database: "M5 7c0-2 14-2 14 0v10c0 2-14 2-14 0zM5 7c0 2 14 2 14 0M5 12c0 2 14 2 14 0",
+        cache: "M6 4h12v16H6zM9 8h6M9 12h6M9 16h3",
+        queue: "M4 7h16M4 12h16M4 17h16M7 4v16M17 4v16",
+        storage: "M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4",
+        analytics: "M5 19V9M12 19V5M19 19v-8M3 19h18",
+        observability: "M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM12 8v4l3 2"
+      };
+      return icons[type] || icons.service;
+    }
+
+    function stringifyDsl(input) {
+      const lines = [`title "${input.title}"`];
+      for (const group of input.groups) {
+        lines.push(`group ${group.id} "${encodeLabel(group.label)}" ${group.x} ${group.y} ${group.w} ${group.h}`);
+      }
+      for (const node of input.nodes) {
+        lines.push(`node ${node.id} "${encodeLabel(node.label)}" ${node.type} ${node.x} ${node.y}`);
+      }
+      for (const edge of input.edges) {
+        lines.push(`edge ${edge.from} ${edge.to} "${encodeLabel(edge.label)}"`);
+      }
+      return lines.join("\n");
+    }
+
+    function parseDsl(source) {
+      const lines = source.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+      const parsed = { title: "Architecture", groups: [], nodes: [], edges: [] };
+      for (const line of lines) {
+        if (line.startsWith("title ")) {
+          parsed.title = readQuoted(line)[0] || parsed.title;
+        } else if (line.startsWith("group ")) {
+          const match = line.match(/^group\s+(\S+)\s+"([^"]+)"\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+          if (match) parsed.groups.push({ id: match[1], label: decodeLabel(match[2]), x: Number(match[3]), y: Number(match[4]), w: Number(match[5]), h: Number(match[6]) });
+        } else if (line.startsWith("node ")) {
+          const match = line.match(/^node\s+(\S+)\s+"([^"]+)"\s+(\S+)\s+(\d+)\s+(\d+)/);
+          if (match) parsed.nodes.push({ id: match[1], label: decodeLabel(match[2]), type: match[3], x: Number(match[4]), y: Number(match[5]) });
+        } else if (line.startsWith("edge ")) {
+          const match = line.match(/^edge\s+(\S+)\s+(\S+)\s+"([^"]+)"/);
+          if (match) parsed.edges.push({ from: match[1], to: match[2], label: decodeLabel(match[3]) });
+        }
+      }
+      return parsed;
+    }
+
+    function parseCodexJson(source) {
+      let parsed;
+      try {
+        parsed = JSON.parse(source);
+      } catch (error) {
+        throw new Error("JSON parse failed");
+      }
+      if (!parsed || typeof parsed !== "object") throw new Error("Root must be an object");
+      if (!Array.isArray(parsed.nodes)) throw new Error("nodes must be an array");
+      if (!Array.isArray(parsed.edges)) throw new Error("edges must be an array");
+      const ids = new Set();
+      const nodes = parsed.nodes.map((node) => {
+        if (!node || typeof node !== "object") throw new Error("node must be an object");
+        const id = String(node.id || "").trim();
+        if (!id) throw new Error("node.id is required");
+        if (ids.has(id)) throw new Error(`duplicate node id: ${id}`);
+        ids.add(id);
+        return {
+          id,
+          label: String(node.label || id),
+          type: String(node.type || "service"),
+          x: clamp(Number(node.x) || 600, 80, 1120),
+          y: clamp(Number(node.y) || 360, 110, 660)
+        };
+      });
+      const edges = parsed.edges.map((edge) => {
+        if (!edge || typeof edge !== "object") throw new Error("edge must be an object");
+        const from = String(edge.from || "").trim();
+        const to = String(edge.to || "").trim();
+        if (!ids.has(from) || !ids.has(to)) throw new Error(`edge references missing node: ${from} -> ${to}`);
+        return { from, to, label: String(edge.label || "connects") };
+      });
+      const groups = Array.isArray(parsed.groups) ? parsed.groups.map((group, index) => ({
+        id: String(group.id || `group-${index + 1}`),
+        label: String(group.label || "Group"),
+        x: clamp(Number(group.x) || 80, 20, 1120),
+        y: clamp(Number(group.y) || 120, 80, 660),
+        w: clamp(Number(group.w) || 500, 120, 1100),
+        h: clamp(Number(group.h) || 360, 120, 620)
+      })) : [];
+      return {
+        title: String(parsed.title || "Codex Diagram"),
+        meta: parsed.meta && typeof parsed.meta === "object" ? parsed.meta : undefined,
+        groups,
+        nodes,
+        edges
+      };
+    }
+
+    function encodeLabel(value) {
+      return String(value).replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/"/g, "'");
+    }
+
+    function decodeLabel(value) {
+      return String(value).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
+    }
+
+    function readQuoted(line) {
+      return [...line.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+    }
+
+    function applyFollowUp() {
+      const instruction = els.followUp.value.trim().toLowerCase();
+      if (!instruction) return;
+      const taken = new Set(model.nodes.map((node) => node.id));
+      const api = model.nodes.find((node) => node.type === "service") || model.nodes[model.nodes.length - 1];
+      const nextX = 935;
+      const nextY = 235 + (model.nodes.length % 5) * 85;
+      let label = "New service";
+      let type = "service";
+      let edgeLabel = "uses";
+
+      if (includesAny(instruction, ["database", "postgres", "sql", "dynamodb"])) {
+        label = includesAny(instruction, ["dynamodb"]) ? "DynamoDB" : "Database";
+        type = "database";
+        edgeLabel = "read/write";
+      } else if (includesAny(instruction, ["redis", "cache"])) {
+        label = "Redis cache";
+        type = "cache";
+        edgeLabel = "cache";
+      } else if (includesAny(instruction, ["queue", "event", "kafka"])) {
+        label = includesAny(instruction, ["kafka"]) ? "Kafka stream" : "Event queue";
+        type = "queue";
+        edgeLabel = "publish";
+      } else if (includesAny(instruction, ["storage", "s3", "bucket"])) {
+        label = "Object storage";
+        type = "storage";
+        edgeLabel = "files";
+      } else if (includesAny(instruction, ["monitor", "log", "observability", "alert"])) {
+        label = "Observability";
+        type = "observability";
+        edgeLabel = "telemetry";
+      }
+
+      const newId = addNode(model.nodes, taken, label, type, nextX, Math.min(nextY, 615));
+      if (api) model.edges.push({ from: api.id, to: newId, label: edgeLabel });
+      els.followUp.value = "";
+      render(model, { silent: true });
+      toast("Edit applied");
+    }
+
+    function updateStats() {
+      els.nodeCount.textContent = String(model.nodes.length);
+      els.edgeCount.textContent = String(model.edges.length);
+      els.groupCount.textContent = String(model.groups.length);
+      els.summary.textContent = `${model.nodes.length} nodes, ${model.edges.length} edges`;
+    }
+
+    function updateArchitectureReview() {
+      const meta = model.meta;
+      if (!meta) {
+        els.architectureReview.textContent = "No architecture metadata loaded.";
+        return;
+      }
+      const qualityGoals = Array.isArray(meta.qualityGoals) ? meta.qualityGoals.slice(0, 4).join(", ") : "not specified";
+      const decisions = Array.isArray(meta.decisions) ? meta.decisions.length : 0;
+      const risks = Array.isArray(meta.risks) ? meta.risks.length : 0;
+      const findings = Array.isArray(meta.reviewFindings) ? meta.reviewFindings : [];
+      const warningCount = findings.filter((finding) => finding.status === "warning").length;
+      const failCount = findings.filter((finding) => finding.status === "fail").length;
+      const findingHtml = findings.slice(0, 4).map((finding) => {
+        const status = escapeXml(finding.status || "note");
+        const pillar = escapeXml(finding.pillar || "general");
+        const text = escapeXml(finding.finding || "");
+        return `<li><strong>${status}</strong> ${pillar}: ${text}</li>`;
+      }).join("");
+      els.architectureReview.innerHTML = `
+        <div><strong>Viewpoint:</strong> ${escapeXml(meta.viewpoint || "not specified")}</div>
+        <div><strong>Quality goals:</strong> ${escapeXml(qualityGoals)}</div>
+        <div><strong>Decisions:</strong> ${decisions} / <strong>Risks:</strong> ${risks} / <strong>Warnings:</strong> ${warningCount} / <strong>Failures:</strong> ${failCount}</div>
+        ${findingHtml ? `<ul style="margin:8px 0 0; padding-left:18px;">${findingHtml}</ul>` : ""}
+      `;
+    }
+
+    function saveHistory() {
+      const item = {
+        title: model.title,
+        prompt: els.prompt.value,
+        dsl: stringifyDsl(model),
+        json: JSON.stringify(model),
+        savedAt: Date.now()
+      };
+      const history = getHistory().filter((entry) => entry.dsl !== item.dsl);
+      history.unshift(item);
+      localStorage.setItem("archdraft.history", JSON.stringify(history.slice(0, 6)));
+      renderHistory();
+    }
+
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem("archdraft.history") || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function renderHistory() {
+      const history = getHistory();
+      els.history.innerHTML = "";
+      if (!history.length) {
+        els.history.innerHTML = '<div class="hint">No saved generations yet.</div>';
+        return;
+      }
+      for (const entry of history) {
+        const button = document.createElement("button");
+        const date = new Date(entry.savedAt).toLocaleString();
+        button.innerHTML = `<strong>${escapeXml(entry.title)}</strong><br><span style="color:var(--muted);font-size:11px;">${escapeXml(date)}</span>`;
+        button.addEventListener("click", () => {
+          els.prompt.value = entry.prompt;
+          render(entry.json ? parseCodexJson(entry.json) : parseDsl(entry.dsl));
+          toast("History restored");
+        });
+        els.history.appendChild(button);
+      }
+    }
+
+    function escapeXml(value) {
+      return String(value).replace(/[<>&"']/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;" }[char]));
+    }
+
+    function trimLabel(value, limit) {
+      return value.length > limit ? `${value.slice(0, limit - 1)}...` : value;
+    }
+
+    function setStatus(message) {
+      els.status.textContent = message;
+    }
+
+    function toast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("visible");
+      window.setTimeout(() => els.toast.classList.remove("visible"), 1700);
+    }
+
+    async function copyDsl() {
+      await navigator.clipboard.writeText(els.dsl.value);
+      toast("Diagram code copied");
+    }
+
+    async function copyCurrentJson() {
+      const value = JSON.stringify(model, null, 2);
+      els.codexJson.value = value;
+      await navigator.clipboard.writeText(value);
+      toast("Current JSON copied");
+    }
+
+    function download(filename, mime, content) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function getSvgSource() {
+      const clone = els.diagramSvg.cloneNode(true);
+      clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    function downloadSvg() {
+      download("architecture-diagram.svg", "image/svg+xml", getSvgSource());
+      toast("SVG exported");
+    }
+
+    function downloadPng() {
+      const svgSource = getSvgSource();
+      const img = new Image();
+      const url = URL.createObjectURL(new Blob([svgSource], { type: "image/svg+xml" }));
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 2400;
+        canvas.height = 1500;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (!blob) return;
+          const pngUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = pngUrl;
+          link.download = "architecture-diagram.png";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(pngUrl);
+          URL.revokeObjectURL(url);
+          toast("PNG exported");
+        }, "image/png");
+      };
+      img.src = url;
+    }
+
+    function setView(view) {
+      const isCode = view === "code";
+      els.diagramCard.style.display = isCode ? "none" : "block";
+      els.codePanel.style.display = isCode ? "block" : "none";
+      els.viewCode.classList.toggle("active", isCode);
+      els.viewDiagram.classList.toggle("active", !isCode);
+      if (isCode) els.codePanel.value = els.dsl.value;
+    }
+
+    function currentPromptInput() {
+      const parts = [els.prompt.value.trim()];
+      if (els.sourceInput.value.trim()) parts.push(`Source context:\n${els.sourceInput.value.trim()}`);
+      if (importedImageName) parts.push(`Imported image: ${importedImageName}. Reconstruct this as an editable diagram.`);
+      return parts.filter(Boolean).join("\n\n");
+    }
+
+    function generateFromCurrentInput() {
+      render(generateModel(currentPromptInput(), { diagramType: els.diagramType.value }));
+    }
+
+    function selectNode(id) {
+      selectedNodeId = id;
+      const node = model.nodes.find((item) => item.id === id);
+      if (!node) {
+        els.nodeLabel.value = "";
+        els.nodeType.value = "service";
+        els.nodeX.value = "";
+        els.nodeY.value = "";
+        return;
+      }
+      els.nodeLabel.value = node.label;
+      els.nodeType.value = node.type;
+      els.nodeX.value = String(Math.round(node.x));
+      els.nodeY.value = String(Math.round(node.y));
+      render(model);
+    }
+
+    function updateSelectedNode() {
+      const node = model.nodes.find((item) => item.id === selectedNodeId);
+      if (!node) {
+        toast("Select a node first");
+        return;
+      }
+      node.label = els.nodeLabel.value.trim() || node.label;
+      node.type = els.nodeType.value;
+      node.x = clamp(Number(els.nodeX.value) || node.x, 80, 1120);
+      node.y = clamp(Number(els.nodeY.value) || node.y, 110, 660);
+      render(model);
+      toast("Node updated");
+    }
+
+    function duplicateSelectedNode() {
+      const node = model.nodes.find((item) => item.id === selectedNodeId);
+      if (!node) {
+        toast("Select a node first");
+        return;
+      }
+      const taken = new Set(model.nodes.map((item) => item.id));
+      const id = uniqueId(`${node.label} copy`, taken);
+      const copy = { ...node, id, label: `${node.label}\ncopy`, x: clamp(node.x + 90, 80, 1120), y: clamp(node.y + 70, 110, 660) };
+      model.nodes.push(copy);
+      model.edges.push({ from: node.id, to: copy.id, label: "related" });
+      selectedNodeId = copy.id;
+      render(model);
+      updateInspectorFromSelection();
+      toast("Node duplicated");
+    }
+
+    function deleteSelectedNode() {
+      if (!selectedNodeId) {
+        toast("Select a node first");
+        return;
+      }
+      model.nodes = model.nodes.filter((node) => node.id !== selectedNodeId);
+      model.edges = model.edges.filter((edge) => edge.from !== selectedNodeId && edge.to !== selectedNodeId);
+      selectedNodeId = "";
+      render(model);
+      updateInspectorFromSelection();
+      toast("Node deleted");
+    }
+
+    function updateInspectorFromSelection() {
+      const node = model.nodes.find((item) => item.id === selectedNodeId);
+      if (!node) {
+        els.nodeLabel.value = "";
+        els.nodeX.value = "";
+        els.nodeY.value = "";
+        return;
+      }
+      els.nodeLabel.value = node.label;
+      els.nodeType.value = node.type;
+      els.nodeX.value = String(Math.round(node.x));
+      els.nodeY.value = String(Math.round(node.y));
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function svgPoint(event) {
+      const point = els.diagramSvg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      return point.matrixTransform(els.diagramSvg.getScreenCTM().inverse());
+    }
+
+    function startDrag(event) {
+      const target = event.target.closest("[data-node-id]");
+      if (!target) return;
+      const node = model.nodes.find((item) => item.id === target.dataset.nodeId);
+      if (!node) return;
+      selectedNodeId = node.id;
+      updateInspectorFromSelection();
+      const point = svgPoint(event);
+      dragState = { id: node.id, dx: point.x - node.x, dy: point.y - node.y };
+      els.diagramSvg.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    }
+
+    function moveDrag(event) {
+      if (!dragState) return;
+      const node = model.nodes.find((item) => item.id === dragState.id);
+      if (!node) return;
+      const point = svgPoint(event);
+      node.x = clamp(point.x - dragState.dx, 80, 1120);
+      node.y = clamp(point.y - dragState.dy, 110, 660);
+      render(model, { silent: true });
+      updateInspectorFromSelection();
+    }
+
+    function endDrag() {
+      if (!dragState) return;
+      dragState = null;
+      render(model);
+      toast("Layout updated");
+    }
+
+    function downloadJson() {
+      download("architecture-diagram.json", "application/json", JSON.stringify(model, null, 2));
+      toast("JSON exported");
+    }
+
+    function downloadMarkdown() {
+      const meta = model.meta || {};
+      const decisions = Array.isArray(meta.decisions) ? meta.decisions : [];
+      const risks = Array.isArray(meta.risks) ? meta.risks : [];
+      const findings = Array.isArray(meta.reviewFindings) ? meta.reviewFindings : [];
+      const lines = [
+        `# ${model.title}`,
+        "",
+        "## Architecture Metadata",
+        `- Viewpoint: ${meta.viewpoint || "not specified"}`,
+        `- Quality goals: ${Array.isArray(meta.qualityGoals) ? meta.qualityGoals.join(", ") : "not specified"}`,
+        "",
+        "## Decisions",
+        ...(decisions.length ? decisions.map((decision) => `- ${decision.id || "ADR"}: ${decision.decision || ""} / ${decision.rationale || ""}`) : ["- None recorded"]),
+        "",
+        "## Risks",
+        ...(risks.length ? risks.map((risk) => `- ${risk.severity || "unknown"}: ${risk.risk || ""} / mitigation: ${risk.mitigation || ""}`) : ["- None recorded"]),
+        "",
+        "## Review Findings",
+        ...(findings.length ? findings.map((finding) => `- ${finding.status || "note"} ${finding.pillar || "general"}: ${finding.finding || ""} / ${finding.recommendation || ""}`) : ["- None recorded"]),
+        "",
+        "## Nodes",
+        ...model.nodes.map((node) => `- **${node.label.replace(/\n/g, " / ")}** (${node.type})`),
+        "",
+        "## Connections",
+        ...model.edges.map((edge) => `- ${edge.from} -> ${edge.to}: ${edge.label}`),
+        "",
+        "## Diagram DSL",
+        "```",
+        stringifyDsl(model),
+        "```"
+      ];
+      download("architecture-diagram.md", "text/markdown", lines.join("\n"));
+      toast("Markdown exported");
+    }
+
+    document.querySelectorAll("[data-preset]").forEach((button) => {
+      button.addEventListener("click", () => {
+        els.prompt.value = presets[button.dataset.preset];
+        generateFromCurrentInput();
+        toast("Preset loaded");
+      });
+    });
+
+    els.generate.addEventListener("click", generateFromCurrentInput);
+    els.applyEdit.addEventListener("click", applyFollowUp);
+    els.loadCodexJson.addEventListener("click", () => {
+      try {
+        selectedNodeId = "";
+        render(parseCodexJson(els.codexJson.value));
+        toast("Codex JSON loaded");
+      } catch (error) {
+        toast(error instanceof Error ? error.message : "Invalid JSON");
+      }
+    });
+    els.copyCurrentJson.addEventListener("click", copyCurrentJson);
+    els.reset.addEventListener("click", () => {
+      els.prompt.value = presets.saas;
+      generateFromCurrentInput();
+      toast("Reset");
+    });
+    els.renderDsl.addEventListener("click", () => {
+      render(parseDsl(els.dsl.value));
+      toast("Code rendered");
+    });
+    els.codePanel.addEventListener("input", () => {
+      els.dsl.value = els.codePanel.value;
+    });
+    els.copyDsl.addEventListener("click", copyDsl);
+    els.copyDslTop.addEventListener("click", copyDsl);
+    els.downloadSvg.addEventListener("click", downloadSvg);
+    els.downloadSvgTop.addEventListener("click", downloadSvg);
+    els.downloadPng.addEventListener("click", downloadPng);
+    els.downloadPngTop.addEventListener("click", downloadPng);
+    els.downloadJson.addEventListener("click", downloadJson);
+    els.downloadMd.addEventListener("click", downloadMarkdown);
+    els.updateNode.addEventListener("click", updateSelectedNode);
+    els.duplicateNode.addEventListener("click", duplicateSelectedNode);
+    els.deleteNode.addEventListener("click", deleteSelectedNode);
+    els.diagramSvg.addEventListener("pointerdown", startDrag);
+    els.diagramSvg.addEventListener("pointermove", moveDrag);
+    els.diagramSvg.addEventListener("pointerup", endDrag);
+    els.diagramSvg.addEventListener("pointercancel", endDrag);
+    els.imageInput.addEventListener("change", () => {
+      const file = els.imageInput.files && els.imageInput.files[0];
+      if (!file) return;
+      importedImageName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        els.imagePreview.src = String(reader.result);
+        els.imagePreview.style.display = "block";
+        toast("Image imported");
+      };
+      reader.readAsDataURL(file);
+    });
+    els.redrawImage.addEventListener("click", () => {
+      const imagePrompt = importedImageName ? `Re-draw the imported architecture image named ${importedImageName}. Preserve components, arrows, and boundaries as editable diagram objects.` : "Re-draw an imported diagram as editable components.";
+      els.prompt.value = `${els.prompt.value.trim()}\n\n${imagePrompt}`.trim();
+      generateFromCurrentInput();
+    });
+    els.zoom.addEventListener("input", () => {
+      els.diagramCard.style.transform = `scale(${Number(els.zoom.value) / 100})`;
+    });
+    els.fit.addEventListener("click", () => {
+      els.zoom.value = "100";
+      els.diagramCard.style.transform = "scale(1)";
+      toast("Fit to stage");
+    });
+    els.viewDiagram.addEventListener("click", () => setView("diagram"));
+    els.viewCode.addEventListener("click", () => setView("code"));
+
+    els.prompt.value = presets.saas;
+    els.codexJson.value = JSON.stringify({
+      title: "Codex Controlled Architecture",
+      meta: {
+        viewpoint: "container",
+        stakeholders: ["engineering", "operations"],
+        qualityGoals: ["reliability", "security", "operability"],
+        assumptions: ["Initial deployment is single-region"],
+        decisions: [{ id: "ADR-001", decision: "Use managed PostgreSQL", rationale: "Reduce operational burden", tradeoffs: "Less low-level control" }],
+        risks: [{ severity: "medium", risk: "Single-region outage", mitigation: "Add DR when RTO/RPO require it" }],
+        reviewFindings: [{ pillar: "reliability", status: "warning", finding: "No explicit DR path", recommendation: "Define RTO/RPO and restore procedure" }],
+        sources: [{ label: "Architecture Designer Skill", url: "architecture-skills/architecture-designer/SKILL.md" }]
+      },
+      groups: [{ id: "app-boundary", label: "Application boundary", x: 360, y: 130, w: 690, h: 480 }],
+      nodes: [
+        { id: "users", label: "Users", type: "user", x: 95, y: 365 },
+        { id: "edge", label: "Edge routing", type: "edge", x: 270, y: 365 },
+        { id: "web-app", label: "Web app", type: "app", x: 520, y: 255 },
+        { id: "api-services", label: "API services", type: "service", x: 520, y: 470 },
+        { id: "database", label: "PostgreSQL", type: "database", x: 795, y: 470 }
+      ],
+      edges: [
+        { from: "users", to: "edge", label: "request" },
+        { from: "edge", to: "web-app", label: "web" },
+        { from: "edge", to: "api-services", label: "api" },
+        { from: "api-services", to: "database", label: "read/write" }
+      ]
+    }, null, 2);
+    renderHistory();
+    render(generateModel(els.prompt.value, { diagramType: els.diagramType.value }));
+  </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+{
+  "title": "AWS SaaS Baseline with PostgreSQL",
+  "meta": {
+    "viewpoint": "container",
+    "stakeholders": [
+      "product owner",
+      "application engineering",
+      "platform operations",
+      "security reviewer"
+    ],
+    "qualityGoals": [
+      "secure public ingress",
+      "recoverable PostgreSQL data",
+      "observable request path",
+      "simple managed-service operations",
+      "moderate cost for early production"
+    ],
+    "assumptions": [
+      "Single-region deployment is acceptable for the initial production stage.",
+      "RPO/RTO are important but not yet strict enough to justify multi-region active-active.",
+      "PostgreSQL is the system of record and must support tested restore.",
+      "Async work should be retryable and observable."
+    ],
+    "decisions": [
+      {
+        "id": "ADR-001",
+        "decision": "Use CloudFront and WAF before the application edge.",
+        "rationale": "Adds TLS termination, caching, and basic L7 protection before application workloads.",
+        "tradeoffs": "Requires explicit cache and invalidation rules."
+      },
+      {
+        "id": "ADR-002",
+        "decision": "Use managed PostgreSQL as the primary relational data store.",
+        "rationale": "Relational consistency and operational maturity fit a transactional SaaS baseline.",
+        "tradeoffs": "Requires schema ownership, connection pooling, backup restore testing, and query tuning."
+      },
+      {
+        "id": "ADR-003",
+        "decision": "Use a queue and worker tier for slow or retryable tasks.",
+        "rationale": "Decouples user-facing APIs from background work and improves failure isolation.",
+        "tradeoffs": "Requires idempotency, DLQ handling, and operational monitoring."
+      }
+    ],
+    "risks": [
+      {
+        "severity": "medium",
+        "risk": "Single-region outage can still take the service offline.",
+        "mitigation": "Document RTO/RPO and add cross-region DR if business requirements demand it."
+      },
+      {
+        "severity": "medium",
+        "risk": "PostgreSQL connection exhaustion under traffic spikes.",
+        "mitigation": "Add connection pooling and monitor active connections, waits, and slow queries."
+      },
+      {
+        "severity": "low",
+        "risk": "Queue retries can duplicate side effects.",
+        "mitigation": "Make worker operations idempotent and route exhausted retries to DLQ."
+      }
+    ],
+    "reviewFindings": [
+      {
+        "pillar": "security",
+        "status": "pass",
+        "finding": "Public traffic enters through an edge control layer before application services.",
+        "recommendation": "Define WAF managed rules, rate limits, TLS policy, and authentication flow."
+      },
+      {
+        "pillar": "reliability",
+        "status": "warning",
+        "finding": "Database backup and HA are represented, but multi-region recovery is not included.",
+        "recommendation": "Keep single-region explicit and add DR once RTO/RPO require it."
+      },
+      {
+        "pillar": "operability",
+        "status": "pass",
+        "finding": "Observability is part of the request and worker flow.",
+        "recommendation": "Define SLIs, alert thresholds, log retention, and runbooks."
+      },
+      {
+        "pillar": "performance",
+        "status": "warning",
+        "finding": "PostgreSQL is central and needs connection pooling and query/index review.",
+        "recommendation": "Add pooler, slow query monitoring, and indexing review before scale testing."
+      }
+    ],
+    "sources": [
+      {
+        "label": "AWS Well-Architected Framework",
+        "url": "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"
+      },
+      {
+        "label": "PostgreSQL Documentation",
+        "url": "https://www.postgresql.org/docs/current/"
+      },
+      {
+        "label": "C4 model",
+        "url": "https://c4model.com/"
+      },
+      {
+        "label": "arc42",
+        "url": "https://arc42.org/overview"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "id": "app-boundary",
+      "label": "Private application boundary",
+      "x": 350,
+      "y": 120,
+      "w": 720,
+      "h": 500
+    }
+  ],
+  "nodes": [
+    {
+      "id": "users",
+      "label": "Users",
+      "type": "user",
+      "x": 95,
+      "y": 365
+    },
+    {
+      "id": "edge",
+      "label": "CloudFront + WAF",
+      "type": "edge",
+      "x": 270,
+      "y": 365
+    },
+    {
+      "id": "web-app",
+      "label": "Web app",
+      "type": "app",
+      "x": 500,
+      "y": 235
+    },
+    {
+      "id": "api-services",
+      "label": "API services",
+      "type": "service",
+      "x": 500,
+      "y": 450
+    },
+    {
+      "id": "queue",
+      "label": "Job queue\nretry + DLQ",
+      "type": "queue",
+      "x": 710,
+      "y": 565
+    },
+    {
+      "id": "workers",
+      "label": "Workers\nidempotent",
+      "type": "service",
+      "x": 930,
+      "y": 565
+    },
+    {
+      "id": "database",
+      "label": "PostgreSQL\nbackup + HA",
+      "type": "database",
+      "x": 790,
+      "y": 450
+    },
+    {
+      "id": "pooler",
+      "label": "Connection pool",
+      "type": "gateway",
+      "x": 660,
+      "y": 450
+    },
+    {
+      "id": "observability",
+      "label": "Observability\nlogs metrics traces",
+      "type": "observability",
+      "x": 930,
+      "y": 235
+    }
+  ],
+  "edges": [
+    {
+      "from": "users",
+      "to": "edge",
+      "label": "request"
+    },
+    {
+      "from": "edge",
+      "to": "web-app",
+      "label": "web"
+    },
+    {
+      "from": "edge",
+      "to": "api-services",
+      "label": "api"
+    },
+    {
+      "from": "web-app",
+      "to": "api-services",
+      "label": "calls"
+    },
+    {
+      "from": "api-services",
+      "to": "pooler",
+      "label": "pooled sql"
+    },
+    {
+      "from": "pooler",
+      "to": "database",
+      "label": "read/write"
+    },
+    {
+      "from": "api-services",
+      "to": "queue",
+      "label": "publish"
+    },
+    {
+      "from": "queue",
+      "to": "workers",
+      "label": "consume"
+    },
+    {
+      "from": "workers",
+      "to": "database",
+      "label": "write results"
+    },
+    {
+      "from": "api-services",
+      "to": "observability",
+      "label": "telemetry"
+    },
+    {
+      "from": "workers",
+      "to": "observability",
+      "label": "logs"
+    }
+  ]
+}
