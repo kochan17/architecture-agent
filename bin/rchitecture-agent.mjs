@@ -12,14 +12,14 @@ const commands = new Set(["init", "open", "validate", "where", "help"]);
 const command = process.argv[2] && commands.has(process.argv[2]) ? process.argv[2] : "help";
 
 function usage() {
-  console.log(`ArchDraft Studio
+  console.log(`Rchitecture Agent
 
 Usage:
-  archdraft init [directory]      Copy the studio, sample JSON, and skill pack into a project
-  archdraft open [directory]      Open architecture-studio.html in the default browser
-  archdraft validate [json-file]  Validate an ArchDraft/Codex architecture JSON file
-  archdraft where                 Print this package location
-  archdraft help                  Show this help
+  rchitecture-agent init [directory]      Copy the studio, sample JSON, and skill pack into a project
+  rchitecture-agent open [directory]      Open architecture-studio.html in the default browser
+  rchitecture-agent validate [json-file]  Validate an Rchitecture Agent/Codex architecture JSON file
+  rchitecture-agent where                 Print this package location
+  rchitecture-agent help                  Show this help
 `);
 }
 
@@ -37,12 +37,12 @@ function copyRecursive(source, target) {
 }
 
 function init() {
-  const target = path.resolve(cwd, process.argv[3] || "archdraft-workspace");
+  const target = path.resolve(cwd, process.argv[3] || "rchitecture-agent-workspace");
   copyRecursive(path.join(packageRoot, "outputs"), path.join(target, "outputs"));
-  copyRecursive(path.join(packageRoot, "architecture-skills"), path.join(target, "architecture-skills"));
+  copyRecursive(path.join(packageRoot, "skills"), path.join(target, "skills"));
   console.log(`Created ${target}`);
   console.log(`Open: ${path.join(target, "outputs", "architecture-studio.html")}`);
-  console.log(`Validate: node ${path.join(target, "architecture-skills", "architecture-designer", "scripts", "validate_architecture_json.mjs")} ${path.join(target, "outputs", "codex-diagram.json")}`);
+  console.log(`Validate: node ${path.join(target, "skills", "rchitecture-agent", "scripts", "validate_architecture_json.mjs")} ${path.join(target, "outputs", "codex-diagram.json")}`);
 }
 
 function openStudio() {
@@ -50,7 +50,7 @@ function openStudio() {
   const html = path.join(targetDir, "outputs", "architecture-studio.html");
   if (!fs.existsSync(html)) {
     console.error(`Not found: ${html}`);
-    console.error("Run `archdraft init` first, or pass a directory that contains outputs/architecture-studio.html.");
+    console.error("Run `rchitecture-agent init` first, or pass a directory that contains outputs/architecture-studio.html.");
     process.exit(1);
   }
   const opener = process.platform === "darwin" ? "open" : process.platform === "win32" ? "cmd" : "xdg-open";
@@ -61,7 +61,7 @@ function openStudio() {
 
 function validate() {
   const jsonFile = path.resolve(cwd, process.argv[3] || "outputs/codex-diagram.json");
-  const validator = path.join(packageRoot, "architecture-skills", "architecture-designer", "scripts", "validate_architecture_json.mjs");
+  const validator = path.join(packageRoot, "skills", "rchitecture-agent", "scripts", "validate_architecture_json.mjs");
   const result = spawnSync(process.execPath, [validator, jsonFile], { stdio: "inherit" });
   process.exit(result.status || 0);
 }

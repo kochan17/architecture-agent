@@ -1,11 +1,11 @@
 ---
-name: architecture-designer
-description: Use when creating or reviewing software architecture diagrams and documentation with Codex-controlled JSON for ArchDraft Studio. Covers common architecture foundations, C4/arc42/ISO 42010-style concerns, cloud providers, databases, quality gates, decisions, risks, and evidence-backed review output.
+name: rchitecture-agent
+description: Use when creating or reviewing software architecture diagrams and documentation with Codex-controlled JSON for Rchitecture Agent. Covers common architecture foundations, C4/arc42/ISO 42010-style concerns, cloud providers, databases, quality gates, decisions, risks, and evidence-backed review output.
 ---
 
-# Architecture Designer
+# Rchitecture Agent
 
-Use this skill when the user asks Codex to create, improve, or review an architecture diagram for ArchDraft Studio without calling a generation API.
+Use this skill when the user asks Codex to create, improve, or review an architecture diagram for Rchitecture Agent without calling a generation API.
 
 ## Workflow
 
@@ -26,7 +26,7 @@ Use this skill when the user asks Codex to create, improve, or review an archite
    - `meta.risks`
    - `meta.reviewFindings`
    - `meta.sources`
-5. Run `node architecture-skills/architecture-designer/scripts/validate_architecture_json.mjs outputs/codex-diagram.json`.
+5. Run `node skills/rchitecture-agent/scripts/validate_architecture_json.mjs outputs/codex-diagram.json`.
 6. If validation reports warnings, either fix the design or leave explicit rationale in `meta.decisions` / `meta.risks`.
 
 ## Output Rules
@@ -39,7 +39,7 @@ Use this skill when the user asks Codex to create, improve, or review an archite
 
 ## JSON Target
 
-The diagram JSON must remain compatible with ArchDraft Studio:
+The diagram JSON must remain compatible with Rchitecture Agent:
 
 ```json
 {
